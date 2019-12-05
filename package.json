@@ -1,8 +1,8 @@
 {
-    "name": "tronweb",
-    "version": "2.8.1",
-    "description": "JavaScript SDK that encapsulates the TRON HTTP API",
-    "main": "dist/TronWeb.node.js",
+    "name": "earthweb",
+    "version": "0.1.0",
+    "description": "JavaScript SDK that encapsulates the EARTH HTTP API",
+    "main": "dist/EarthWeb.node.js",
     "scripts": {
         "prepare": "npm run build",
         "build": "npm run clean && webpack --config webpack.config.js --progress --colors",
@@ -83,11 +83,11 @@
             "url": "https://github.com/sullof"
         },
         {
-            "name": "TRON-US",
-            "url": "https://github.com/tron-us"
+            "name": "Gabriel Cardona",
+            "url": "https://www.earth.engineering"
         }
     ],
-    "homepage": "https://github.com/tron-us/tronweb",
+    "homepage": "https://github.com/earthengineering/earthweb",
     "license": "MIT",
-    "repository": "https://github.com/tron-us/tronweb.git"
+    "repository": "https://github.com/earthengineering/earthweb.git"
 }
