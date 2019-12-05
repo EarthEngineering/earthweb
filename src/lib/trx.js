@@ -873,31 +873,39 @@ export default class Trx {
     }
 
     async sendTransaction(to = false, amount = false, options = {}, callback = false) {
+        console.log('OOOONE')
         if (utils.isFunction(options)) {
             callback = options;
             options = {};
         }
+        console.log('twooNE')
 
         if (typeof options === 'string')
             options = {privateKey: options};
+        console.log('THREEE')
 
         if (!callback)
             return this.injectPromise(this.sendTransaction, to, amount, options);
+        console.log('FOURNE')
 
         if (!this.earthWeb.isAddress(to))
             return callback('Invalid recipient provided');
+        console.log('FIVENE')
 
         if (!utils.isInteger(amount) || amount <= 0)
             return callback('Invalid amount provided');
+        console.log('SIXXXXEI')
 
         options = {
             privateKey: this.earthWeb.defaultPrivateKey,
             address: this.earthWeb.defaultAddress.hex,
             ...options
         };
+        console.log('SEVVEN')
 
         if (!options.privateKey && !options.address)
             return callback('Function requires either a private key or address to be set');
+        console.log('EIGGGHHHTT')
 
         try {
             const address = options.privateKey ? this.earthWeb.address.fromPrivateKey(options.privateKey) : options.address;
