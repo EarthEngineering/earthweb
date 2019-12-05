@@ -52,9 +52,9 @@ export default class HttpProvider {
     }
 
     request(url, payload = {}, method = "get") {
-        console.log("ZZZZZZ");
+        console.log("method", method);
         method = method.toLowerCase();
-        console.log("ZZZZZZ");
+        console.log("payload", payload);
 
         return this.instance
             .request({
