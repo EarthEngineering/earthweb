@@ -1890,6 +1890,7 @@ export default class TransactionBuilder {
         if (!callback)
             return this.injectPromise(this.updateAccountPermissions, ownerAddress, ownerPermissions, witnessPermissions, activesPermissions);
 
+            console.log("OWNER ADDRESS: ", ownerAddress)
         if (!this.earthWeb.isAddress(ownerAddress))
             return callback('Invalid ownerAddress provided');
 
