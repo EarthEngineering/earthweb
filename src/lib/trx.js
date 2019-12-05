@@ -909,9 +909,13 @@ export default class Trx {
 
         try {
             const address = options.privateKey ? this.earthWeb.address.fromPrivateKey(options.privateKey) : options.address;
+        console.log('NIIIN')
             const transaction = await this.earthWeb.transactionBuilder.sendTrx(to, amount, address);
+        console.log('TEEEEn')
             const signedTransaction = await this.sign(transaction, options.privateKey || undefined);
+        console.log('ELLLEEVE')
             const result = await this.sendRawTransaction(signedTransaction);
+        console.log('TWEEELVE')
 
             return callback(null, result);
         } catch (ex) {
