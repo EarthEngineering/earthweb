@@ -20,7 +20,7 @@ function fromUtf8(value) {
 function resultManager(transaction, callback) {
     console.log("FOOOOBAR")
     if (transaction.Error)
-    console.log("FBOOOfAR")
+    console.log("FBOOOfAR", transaction)
         return callback(transaction.Error);
 
     if (transaction.result && transaction.result.message) {
