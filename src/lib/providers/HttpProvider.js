@@ -1,18 +1,25 @@
-import axios from 'axios';
-import utils from 'utils';
+import axios from "axios";
+import utils from "utils";
 
 export default class HttpProvider {
-    constructor(host, timeout = 30000, user = false, password = false, headers = {}, statusPage = '/') {
+    constructor(
+        host,
+        timeout = 30000,
+        user = false,
+        password = false,
+        headers = {},
+        statusPage = "/"
+    ) {
         if (!utils.isValidURL(host))
-            throw new Error('Invalid URL provided to HttpProvider');
+            throw new Error("Invalid URL provided to HttpProvider");
 
         if (isNaN(timeout) || timeout < 0)
-            throw new Error('Invalid timeout duration provided');
+            throw new Error("Invalid timeout duration provided");
 
         if (!utils.isObject(headers))
-            throw new Error('Invalid headers object provided');
+            throw new Error("Invalid headers object provided");
 
-        host = host.replace(/\/+$/, '');
+        host = host.replace(/\/+$/, "");
 
         this.host = host;
         this.timeout = timeout;
@@ -28,28 +35,37 @@ export default class HttpProvider {
             auth: user && {
                 user,
                 password
-            },
+            }
         });
     }
 
-    setStatusPage(statusPage = '/') {
+    setStatusPage(statusPage = "/") {
         this.statusPage = statusPage;
     }
 
     async isConnected(statusPage = this.statusPage) {
-        return this.request(statusPage).then(data => {
-            return utils.hasProperties(data, 'blockID', 'block_header');
-        }).catch(() => false);
+        return this.request(statusPage)
+            .then(data => {
+                return utils.hasProperties(data, "blockID", "block_header");
+            })
+            .catch(() => false);
     }
 
-    request(url, payload = {}, method = 'get') {
+    request(url, payload = {}, method = "get") {
+        console.log("ZZZZZZ");
         method = method.toLowerCase();
+        console.log("ZZZZZZ");
 
-        return this.instance.request({
-            data: method == 'post' && Object.keys(payload).length ? payload : null,
-            params: method == 'get' && payload,
-            url,
-            method
-        }).then(({data}) => data);
+        return this.instance
+            .request({
+                data:
+                    method == "post" && Object.keys(payload).length
+                        ? payload
+                        : null,
+                params: method == "get" && payload,
+                url,
+                method
+            })
+            .then(({ data }) => data);
     }
-};
+}
