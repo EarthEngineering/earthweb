@@ -171,3 +171,13 @@ payload { visible: false,
   signature:
    [ '7593b8e21d48423b53035e7cfe5279fca59d2ddee5fcea1d08cad92f4cdffde379a27c7c30ea1bfd5c3bcec4965c070a5c7351d74c609bb16bbd2a778293527700' ] }
 ```
+
+```
+ERROR:  class org.tron.core.exception.ContractValidateException : Invalid ownerAddress
+ADDRESS: EbgmW9YGvFMWDGDkHpS3R46i1TvhyndRkP
+AMOUNT: 10000000000
+method post
+payload { to_address: '21cb487d2d73f8582462bc31eb84c6027f0e5ed067',
+  owner_address: '21928c9af0651632157ef27a2cf17ca72c575a4d21',
+  amount: 10000000000 }
+```

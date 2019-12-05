@@ -18,10 +18,13 @@ function fromUtf8(value) {
 }
 
 function resultManager(transaction, callback) {
+    console.log("FOOOOBAR")
     if (transaction.Error)
+    console.log("FBOOOfAR")
         return callback(transaction.Error);
 
     if (transaction.result && transaction.result.message) {
+    console.log("JOOBEAAR")
         return callback(
             self.earthWeb.toUtf8(transaction.result.message)
         );
