@@ -1397,9 +1397,8 @@ export default class TransactionBuilder {
     }
 
     /**
-     * Create an exchange between a token and TRX.
+     * Create an exchange between a token and EARTH.
      * Token Name should be a CASE SENSITIVE string.
-     * PLEASE VERIFY THIS ON TRONSCAN.
      */
     createTRXExchange(tokenName, tokenBalance, trxBalance, ownerAddress = this.earthWeb.defaultAddress.hex, options, callback = false) {
         if (utils.isFunction(options)) {
@@ -1461,9 +1460,8 @@ export default class TransactionBuilder {
 
     /**
      * Create an exchange between a token and another token.
-     * DO NOT USE THIS FOR TRX.
+     * DO NOT USE THIS FOR EARTH.
      * Token Names should be a CASE SENSITIVE string.
-     * PLEASE VERIFY THIS ON TRONSCAN.
      */
     createTokenExchange(firstTokenName, firstTokenBalance, secondTokenName, secondTokenBalance, ownerAddress = this.earthWeb.defaultAddress.hex, options, callback = false) {
         if (utils.isFunction(options)) {

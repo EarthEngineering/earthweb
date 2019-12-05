@@ -27,7 +27,7 @@ describe('EarthWeb.trx', function () {
 
     before(async function () {
         earthWeb = earthWebBuilder.createInstance();
-        // ALERT this works only with Tron Quickstart:
+        // ALERT this works only with Earth Quickstart:
         accounts = await earthWebBuilder.getTestAccounts(-1);
         emptyAccount = await EarthWeb.createAccount();
     });

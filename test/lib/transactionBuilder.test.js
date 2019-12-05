@@ -32,7 +32,7 @@ describe('EarthWeb.transactionBuilder', function () {
 
     before(async function () {
         earthWeb = earthWebBuilder.createInstance();
-        // ALERT this works only with Tron Quickstart:
+        // ALERT this works only with Earth Quickstart:
         accounts = await earthWebBuilder.getTestAccounts(-1);
         emptyAccount = await EarthWeb.createAccount();
         isAllowSameTokenNameApproved = await isProposalApproved(earthWeb, 'getAllowSameTokenName')
@@ -1069,7 +1069,7 @@ describe('EarthWeb.transactionBuilder', function () {
 
     describe.skip("#applyForSR", async function () {
 
-        let url = 'https://xtron.network';
+        let url = 'https://www.earth.engineering';
 
         it('should allow accounts[0] to apply for SR', async function () {
 
@@ -1118,9 +1118,9 @@ describe('EarthWeb.transactionBuilder', function () {
 
 
     describe.skip("#vote", async function () {
-        // this is not testable because on Tron Quickstart (like on Shasta) it is not possible to vote
+        // this is not testable because on Earth Quickstart (like on Ohio) it is not possible to vote
 
-        let url = 'https://xtron.network';
+        let url = 'https://www.earth.engineering';
         // let witnesses;
 
 
