@@ -1,12 +1,12 @@
-const fs = require('fs');
-const path = require('path');
-const target = path.resolve(__dirname, '..', 'test', 'setup', 'TronWeb.js');
+const fs = require("fs");
+const path = require("path");
+const target = path.resolve(__dirname, "..", "test", "setup", "EarthWeb.js");
 
 try {
     fs.unlinkSync(target);
-} catch(ex) {}
+} catch (ex) {}
 
 fs.copyFileSync(
-    path.resolve(__dirname, '..', 'test', 'setup', 'node.js'),
+    path.resolve(__dirname, "..", "test", "setup", "node.js"),
     target
 );

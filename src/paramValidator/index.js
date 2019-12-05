@@ -1,16 +1,20 @@
-import TronWeb from 'index';
-import utils from 'utils';
+import EarthWeb from "index";
+import utils from "utils";
 
 export default class Validator {
-
-    constructor(tronWeb = false) {
-        if (!tronWeb || !tronWeb instanceof TronWeb)
-            throw new Error('Expected instance of TronWeb');
-        this.tronWeb = tronWeb;
+    constructor(earthWeb = false) {
+        if (!earthWeb || !earthWeb instanceof EarthWeb)
+            throw new Error("Expected instance of EarthWeb");
+        this.earthWeb = earthWeb;
     }
 
     invalid(param) {
-        return param.msg || `Invalid ${param.name}${param.type === 'address' ? ' address' : ''} provided`;
+        return (
+            param.msg ||
+            `Invalid ${param.name}${
+                param.type === "address" ? " address" : ""
+            } provided`
+        );
     }
 
     notPositive(param) {
@@ -18,11 +22,13 @@ export default class Validator {
     }
 
     notEqual(param) {
-        return param.msg || `${param.names[0]} can not be equal to ${param.names[1]}`;
+        return (
+            param.msg ||
+            `${param.names[0]} can not be equal to ${param.names[1]}`
+        );
     }
 
-    notValid(params = [], callback = new Function) {
-
+    notValid(params = [], callback = new Function()) {
         let normalized = {};
         let no = false;
         for (const param of params) {
@@ -38,98 +44,103 @@ export default class Validator {
                 se,
                 optional
             } = param;
-            if (optional && (
-                !utils.isNotNullOrUndefined(value)
-                || (type !== 'boolean' && value === false)))
+            if (
+                optional &&
+                (!utils.isNotNullOrUndefined(value) ||
+                    (type !== "boolean" && value === false))
+            )
                 continue;
             normalized[param.name] = param.value;
             switch (type) {
-
-                case 'address':
-                    if (!this.tronWeb.isAddress(value)) {
+                case "address":
+                    if (!this.earthWeb.isAddress(value)) {
                         no = true;
                     } else {
-                        normalized[name] = this.tronWeb.address.toHex(value);
+                        normalized[name] = this.earthWeb.address.toHex(value);
                     }
                     break;
 
-                case 'integer':
-                    if (!utils.isInteger(value) ||
-                        (typeof gt === 'number' && value <= param.gt) ||
-                        (typeof lt === 'number' && value >= param.lt) ||
-                        (typeof gte === 'number' && value < param.gte) ||
-                        (typeof lte === 'number' && value > param.lte)) {
+                case "integer":
+                    if (
+                        !utils.isInteger(value) ||
+                        (typeof gt === "number" && value <= param.gt) ||
+                        (typeof lt === "number" && value >= param.lt) ||
+                        (typeof gte === "number" && value < param.gte) ||
+                        (typeof lte === "number" && value > param.lte)
+                    ) {
                         no = true;
                     }
                     break;
 
-                case 'positive-integer':
+                case "positive-integer":
                     if (!utils.isInteger(value) || value <= 0) {
                         callback(this.notPositive(param));
                         return;
                     }
                     break;
 
-                case 'tokenId':
+                case "tokenId":
                     if (!utils.isString(value) || !value.length) {
                         no = true;
                     }
                     break;
 
-                case 'notEmptyObject':
+                case "notEmptyObject":
                     if (!utils.isObject(value) || !Object.keys(value).length) {
                         no = true;
                     }
                     break;
 
-                case 'notEqual':
+                case "notEqual":
                     if (normalized[names[0]] === normalized[names[1]]) {
                         callback(this.notEqual(param));
                         return true;
                     }
                     break;
 
-                case 'resource':
-                    if (!['BANDWIDTH', 'ENERGY'].includes(value)) {
+                case "resource":
+                    if (!["BANDWIDTH", "ENERGY"].includes(value)) {
                         no = true;
                     }
                     break;
 
-                case 'url':
+                case "url":
                     if (!utils.isValidURL(value)) {
                         no = true;
                     }
                     break;
 
-                case 'hex':
+                case "hex":
                     if (!utils.isHex(value)) {
                         no = true;
                     }
                     break;
 
-                case 'array':
+                case "array":
                     if (!Array.isArray(value)) {
                         no = true;
                     }
                     break;
 
-                case 'not-empty-string':
+                case "not-empty-string":
                     if (!utils.isString(value) || !value.length) {
                         no = true;
                     }
                     break;
 
-                case 'boolean':
+                case "boolean":
                     if (!utils.isBoolean(value)) {
                         no = true;
                     }
                     break;
-                case 'string':
-                    if (!utils.isString(value) ||
-                        (typeof gt === 'number' && value.length <= param.gt) ||
-                        (typeof lt === 'number' && value.length >= param.lt) ||
-                        (typeof gte === 'number' && value.length < param.gte) ||
-                        (typeof lte === 'number' && value.length > param.lte)) {
+                case "string":
+                    if (
+                        !utils.isString(value) ||
+                        (typeof gt === "number" && value.length <= param.gt) ||
+                        (typeof lt === "number" && value.length >= param.lt) ||
+                        (typeof gte === "number" && value.length < param.gte) ||
+                        (typeof lte === "number" && value.length > param.lte)
+                    ) {
                         no = true;
                     }
                     break;
@@ -142,4 +153,3 @@ export default class Validator {
         return false;
     }
 }
-

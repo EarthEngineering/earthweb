@@ -1,25 +1,25 @@
-import utils from 'utils';
-import {ADDRESS_PREFIX_REGEX} from 'utils/address';
-import injectpromise from 'injectpromise';
+import utils from "utils";
+import { ADDRESS_PREFIX_REGEX } from "utils/address";
+import injectpromise from "injectpromise";
 
 const getFunctionSelector = abi => {
-    return abi.name + '(' + getParamTypes(abi.inputs || []).join(',') + ')';
-}
+    return abi.name + "(" + getParamTypes(abi.inputs || []).join(",") + ")";
+};
 
 const getParamTypes = params => {
-    return params.map(({type}) => type);
-}
+    return params.map(({ type }) => type);
+};
 
 const decodeOutput = (abi, output) => {
-    const names = abi.map(({name}) => name).filter(name => !!name);
-    const types = abi.map(({type}) => type);
+    const names = abi.map(({ name }) => name).filter(name => !!name);
+    const types = abi.map(({ type }) => type);
 
     return utils.abi.decodeParams(names, types, output);
 };
 
 export default class Method {
     constructor(contract, abi) {
-        this.tronWeb = contract.tronWeb;
+        this.earthWeb = contract.earthWeb;
         this.contract = contract;
 
         this.abi = abi;
@@ -29,7 +29,9 @@ export default class Method {
         this.outputs = abi.outputs || [];
 
         this.functionSelector = getFunctionSelector(abi);
-        this.signature = this.tronWeb.sha3(this.functionSelector, false).slice(0, 8);
+        this.signature = this.earthWeb
+            .sha3(this.functionSelector, false)
+            .slice(0, 8);
         this.injectPromise = injectpromise(this);
 
         this.defaultOptions = {
@@ -41,20 +43,24 @@ export default class Method {
     }
 
     decodeInput(data) {
-        return decodeOutput(this.inputs, '0x' + data);
+        return decodeOutput(this.inputs, "0x" + data);
     }
 
     onMethod(...args) {
         const types = getParamTypes(this.inputs);
 
         args.forEach((arg, index) => {
-            if (types[index] == 'address')
-                args[index] = this.tronWeb.address.toHex(arg).replace(ADDRESS_PREFIX_REGEX, '0x')
+            if (types[index] == "address")
+                args[index] = this.earthWeb.address
+                    .toHex(arg)
+                    .replace(ADDRESS_PREFIX_REGEX, "0x");
 
-            if (types[index] == 'address[]') {
+            if (types[index] == "address[]") {
                 args[index] = args[index].map(address => {
-                    return this.tronWeb.address.toHex(address).replace(ADDRESS_PREFIX_REGEX, '0x')
-                })
+                    return this.earthWeb.address
+                        .toHex(address)
+                        .replace(ADDRESS_PREFIX_REGEX, "0x");
+                });
             }
         });
 
@@ -62,7 +68,7 @@ export default class Method {
             call: (...methodArgs) => this._call(types, args, ...methodArgs),
             send: (...methodArgs) => this._send(types, args, ...methodArgs),
             watch: (...methodArgs) => this._watch(...methodArgs)
-        }
+        };
     }
 
     async _call(types, args, options = {}, callback = false) {
@@ -75,23 +81,27 @@ export default class Method {
             return this.injectPromise(this._call, types, args, options);
 
         if (types.length !== args.length)
-            return callback('Invalid argument count provided');
+            return callback("Invalid argument count provided");
 
         if (!this.contract.address)
-            return callback('Smart contract is missing address');
+            return callback("Smart contract is missing address");
 
         if (!this.contract.deployed)
-            return callback('Calling smart contracts requires you to load the contract first');
+            return callback(
+                "Calling smart contracts requires you to load the contract first"
+            );
 
-        const {stateMutability} = this.abi;
+        const { stateMutability } = this.abi;
 
-        if (!['pure', 'view'].includes(stateMutability.toLowerCase()))
-            return callback(`Methods with state mutability "${stateMutability}" must use send()`);
+        if (!["pure", "view"].includes(stateMutability.toLowerCase()))
+            return callback(
+                `Methods with state mutability "${stateMutability}" must use send()`
+            );
 
         options = {
             ...this.defaultOptions,
-            from: this.tronWeb.defaultAddress.hex,
-            ...options,
+            from: this.earthWeb.defaultAddress.hex,
+            ...options
         };
 
         const parameters = args.map((value, index) => ({
@@ -99,52 +109,67 @@ export default class Method {
             value
         }));
 
-        this.tronWeb.transactionBuilder.triggerSmartContract(
+        this.earthWeb.transactionBuilder.triggerSmartContract(
             this.contract.address,
             this.functionSelector,
             options,
             parameters,
-            options.from ? this.tronWeb.address.toHex(options.from) : false,
+            options.from ? this.earthWeb.address.toHex(options.from) : false,
             (err, transaction) => {
-                if (err)
-                    return callback(err);
+                if (err) return callback(err);
 
-                if (!utils.hasProperty(transaction, 'constant_result'))
-                    return callback('Failed to execute');
+                if (!utils.hasProperty(transaction, "constant_result"))
+                    return callback("Failed to execute");
 
                 try {
-
-                    const len = transaction.constant_result[0].length
+                    const len = transaction.constant_result[0].length;
                     if (len === 0 || len % 64 === 8) {
-                        let msg = 'The call has been reverted or has thrown an error.'
+                        let msg =
+                            "The call has been reverted or has thrown an error.";
                         if (len !== 0) {
-                            msg += ' Error message: '
-                            let msg2 = ''
-                            let chunk = transaction.constant_result[0].substring(8)
+                            msg += " Error message: ";
+                            let msg2 = "";
+                            let chunk = transaction.constant_result[0].substring(
+                                8
+                            );
                             for (let i = 0; i < len - 8; i += 64) {
-                                msg2 += this.tronWeb.toUtf8(chunk.substring(i, i + 64))
+                                msg2 += this.earthWeb.toUtf8(
+                                    chunk.substring(i, i + 64)
+                                );
                             }
-                            msg += msg2.replace(/(\u0000|\u000b|\f)+/g, ' ').replace(/ +/g, ' ').replace(/\s+$/g, '');
+                            msg += msg2
+                                .replace(/(\u0000|\u000b|\f)+/g, " ")
+                                .replace(/ +/g, " ")
+                                .replace(/\s+$/g, "");
                         }
-                        return callback(msg)
+                        return callback(msg);
                     }
 
-                    let output = decodeOutput(this.outputs, '0x' + transaction.constant_result[0]);
+                    let output = decodeOutput(
+                        this.outputs,
+                        "0x" + transaction.constant_result[0]
+                    );
 
-                    if (output.length === 1)
-                        output = output[0];
+                    if (output.length === 1) output = output[0];
 
                     return callback(null, output);
                 } catch (ex) {
                     return callback(ex);
                 }
-            });
+            }
+        );
     }
 
-    async _send(types, args, options = {}, privateKey = this.tronWeb.defaultPrivateKey, callback = false) {
+    async _send(
+        types,
+        args,
+        options = {},
+        privateKey = this.earthWeb.defaultPrivateKey,
+        callback = false
+    ) {
         if (utils.isFunction(privateKey)) {
             callback = privateKey;
-            privateKey = this.tronWeb.defaultPrivateKey;
+            privateKey = this.earthWeb.defaultPrivateKey;
         }
 
         if (utils.isFunction(options)) {
@@ -153,30 +178,40 @@ export default class Method {
         }
 
         if (!callback)
-            return this.injectPromise(this._send, types, args, options, privateKey);
+            return this.injectPromise(
+                this._send,
+                types,
+                args,
+                options,
+                privateKey
+            );
 
         if (types.length !== args.length)
-            throw new Error('Invalid argument count provided');
+            throw new Error("Invalid argument count provided");
 
         if (!this.contract.address)
-            return callback('Smart contract is missing address');
+            return callback("Smart contract is missing address");
 
         if (!this.contract.deployed)
-            return callback('Calling smart contracts requires you to load the contract first');
+            return callback(
+                "Calling smart contracts requires you to load the contract first"
+            );
 
-        const {stateMutability} = this.abi;
+        const { stateMutability } = this.abi;
 
-        if (['pure', 'view'].includes(stateMutability.toLowerCase()))
-            return callback(`Methods with state mutability "${stateMutability}" must use call()`);
+        if (["pure", "view"].includes(stateMutability.toLowerCase()))
+            return callback(
+                `Methods with state mutability "${stateMutability}" must use call()`
+            );
 
         // If a function isn't payable, dont provide a callValue.
-        if (!['payable'].includes(stateMutability.toLowerCase()))
+        if (!["payable"].includes(stateMutability.toLowerCase()))
             options.callValue = 0;
 
         options = {
             ...this.defaultOptions,
-            from: this.tronWeb.defaultAddress.hex,
-            ...options,
+            from: this.earthWeb.defaultAddress.hex,
+            ...options
         };
 
         const parameters = args.map((value, index) => ({
@@ -185,29 +220,38 @@ export default class Method {
         }));
 
         try {
-            const address = privateKey ? this.tronWeb.address.fromPrivateKey(privateKey) : this.tronWeb.defaultAddress.base58;
-            const transaction = await this.tronWeb.transactionBuilder.triggerSmartContract(
+            const address = privateKey
+                ? this.earthWeb.address.fromPrivateKey(privateKey)
+                : this.earthWeb.defaultAddress.base58;
+            const transaction = await this.earthWeb.transactionBuilder.triggerSmartContract(
                 this.contract.address,
                 this.functionSelector,
                 options,
                 parameters,
-                this.tronWeb.address.toHex(address)
+                this.earthWeb.address.toHex(address)
             );
 
             if (!transaction.result || !transaction.result.result)
-                return callback('Unknown error: ' + JSON.stringify(transaction, null, 2));
+                return callback(
+                    "Unknown error: " + JSON.stringify(transaction, null, 2)
+                );
 
             // If privateKey is false, this won't be signed here. We assume sign functionality will be replaced.
-            const signedTransaction = await this.tronWeb.trx.sign(transaction.transaction, privateKey);
+            const signedTransaction = await this.earthWeb.trx.sign(
+                transaction.transaction,
+                privateKey
+            );
 
             if (!signedTransaction.signature) {
                 if (!privateKey)
-                    return callback('Transaction was not signed properly');
+                    return callback("Transaction was not signed properly");
 
-                return callback('Invalid private key provided');
+                return callback("Invalid private key provided");
             }
 
-            const broadcast = await this.tronWeb.trx.sendRawTransaction(signedTransaction);
+            const broadcast = await this.earthWeb.trx.sendRawTransaction(
+                signedTransaction
+            );
 
             if (broadcast.code) {
                 const err = {
@@ -215,8 +259,8 @@ export default class Method {
                     message: broadcast.code
                 };
                 if (broadcast.message)
-                    err.message = this.tronWeb.toUtf8(broadcast.message);
-                return callback(err)
+                    err.message = this.earthWeb.toUtf8(broadcast.message);
+                return callback(err);
             }
 
             if (!options.shouldPollResponse)
@@ -225,12 +269,14 @@ export default class Method {
             const checkResult = async (index = 0) => {
                 if (index === 20) {
                     return callback({
-                        error: 'Cannot find result in solidity node',
+                        error: "Cannot find result in solidity node",
                         transaction: signedTransaction
                     });
                 }
 
-                const output = await this.tronWeb.trx.getTransactionInfo(signedTransaction.txID);
+                const output = await this.earthWeb.trx.getTransactionInfo(
+                    signedTransaction.txID
+                );
 
                 if (!Object.keys(output).length) {
                     return setTimeout(() => {
@@ -238,36 +284,39 @@ export default class Method {
                     }, 3000);
                 }
 
-                if (output.result && output.result === 'FAILED') {
+                if (output.result && output.result === "FAILED") {
                     return callback({
-                        error: this.tronWeb.toUtf8(output.resMessage),
+                        error: this.earthWeb.toUtf8(output.resMessage),
                         transaction: signedTransaction,
                         output
                     });
                 }
 
-                if (!utils.hasProperty(output, 'contractResult')) {
+                if (!utils.hasProperty(output, "contractResult")) {
                     return callback({
-                        error: 'Failed to execute: ' + JSON.stringify(output, null, 2),
+                        error:
+                            "Failed to execute: " +
+                            JSON.stringify(output, null, 2),
                         transaction: signedTransaction,
                         output
                     });
                 }
 
-                if (options.rawResponse)
-                    return callback(null, output);
+                if (options.rawResponse) return callback(null, output);
 
-                let decoded = decodeOutput(this.outputs, '0x' + output.contractResult[0]);
+                let decoded = decodeOutput(
+                    this.outputs,
+                    "0x" + output.contractResult[0]
+                );
 
-                if (decoded.length === 1)
-                    decoded = decoded[0];
+                if (decoded.length === 1) decoded = decoded[0];
 
                 if (options.keepTxID) {
                     return callback(null, [signedTransaction.txID, decoded]);
                 }
 
                 return callback(null, decoded);
-            }
+            };
 
             checkResult();
         } catch (ex) {
@@ -282,16 +331,16 @@ export default class Method {
         }
 
         if (!utils.isFunction(callback))
-            throw new Error('Expected callback to be provided');
+            throw new Error("Expected callback to be provided");
 
         if (!this.contract.address)
-            return callback('Smart contract is missing address');
+            return callback("Smart contract is missing address");
 
         if (!this.abi.type || !/event/i.test(this.abi.type))
-            return callback('Invalid method type for event watching');
+            return callback("Invalid method type for event watching");
 
-        if (!this.tronWeb.eventServer)
-            return callback('No event server configured');
+        if (!this.earthWeb.eventServer)
+            return callback("No event server configured");
 
         let listener = false;
         let lastBlock = false;
@@ -299,61 +348,68 @@ export default class Method {
 
         const getEvents = async () => {
             try {
-
                 const params = {
                     since,
                     eventName: this.name,
-                    sort: 'block_timestamp',
-                    blockNumber: 'latest',
+                    sort: "block_timestamp",
+                    blockNumber: "latest",
                     filters: options.filters
-                }
+                };
                 if (options.resourceNode) {
                     if (/full/i.test(options.resourceNode))
-                        params.onlyUnconfirmed = true
-                    else
-                        params.onlyConfirmed = true
+                        params.onlyUnconfirmed = true;
+                    else params.onlyConfirmed = true;
                 }
 
-                const events = await this.tronWeb.event.getEventsByContractAddress(this.contract.address, params);
+                const events = await this.earthWeb.event.getEventsByContractAddress(
+                    this.contract.address,
+                    params
+                );
                 const [latestEvent] = events.sort((a, b) => b.block - a.block);
                 const newEvents = events.filter((event, index) => {
-
-                    if (options.resourceNode && event.resourceNode &&
-                        options.resourceNode.toLowerCase() !== event.resourceNode.toLowerCase()) {
-                        return false
+                    if (
+                        options.resourceNode &&
+                        event.resourceNode &&
+                        options.resourceNode.toLowerCase() !==
+                            event.resourceNode.toLowerCase()
+                    ) {
+                        return false;
                     }
 
-                    const duplicate = events.slice(0, index).some(priorEvent => (
-                        JSON.stringify(priorEvent) == JSON.stringify(event)
-                    ));
+                    const duplicate = events
+                        .slice(0, index)
+                        .some(
+                            priorEvent =>
+                                JSON.stringify(priorEvent) ==
+                                JSON.stringify(event)
+                        );
 
-                    if (duplicate)
-                        return false;
+                    if (duplicate) return false;
 
-                    if (!lastBlock)
-                        return true;
+                    if (!lastBlock) return true;
 
                     return event.block > lastBlock;
                 });
 
-                if (latestEvent)
-                    lastBlock = latestEvent.block;
+                if (latestEvent) lastBlock = latestEvent.block;
 
                 return newEvents;
             } catch (ex) {
                 return Promise.reject(ex);
             }
-
         };
 
         const bindListener = () => {
-            if (listener)
-                clearInterval(listener);
+            if (listener) clearInterval(listener);
 
             listener = setInterval(() => {
-                getEvents().then(events => events.forEach(event => {
-                    callback(null, utils.parseEvent(event, this.abi))
-                })).catch(err => callback(err));
+                getEvents()
+                    .then(events =>
+                        events.forEach(event => {
+                            callback(null, utils.parseEvent(event, this.abi));
+                        })
+                    )
+                    .catch(err => callback(err));
             }, 3000);
         };
 
@@ -363,12 +419,11 @@ export default class Method {
         return {
             start: bindListener(),
             stop: () => {
-                if (!listener)
-                    return;
+                if (!listener) return;
 
                 clearInterval(listener);
                 listener = false;
             }
-        }
+        };
     }
 }

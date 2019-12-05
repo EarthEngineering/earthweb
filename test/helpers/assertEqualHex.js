@@ -1,10 +1,12 @@
-const assert = require('chai').assert;
-const tronWebBuilder = require('./tronWebBuilder');
+const assert = require("chai").assert;
+const earthWebBuilder = require("./earthWebBuilder");
 
-module.exports = async function (result, string) {
-
+module.exports = async function(result, string) {
     assert.equal(
         result,
-        tronWebBuilder.getInstance().toHex(string).substring(2)
-    )
-}
+        earthWebBuilder
+            .getInstance()
+            .toHex(string)
+            .substring(2)
+    );
+};

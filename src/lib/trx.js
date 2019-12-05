@@ -1,4 +1,4 @@
-import TronWeb from 'index';
+import EarthWeb from 'index';
 import utils from 'utils';
 import {keccak256, toUtf8Bytes, recoverAddress, SigningKey} from 'utils/ethersUtils';
 import {ADDRESS_PREFIX} from 'utils/address';
@@ -10,29 +10,29 @@ const TRX_MESSAGE_HEADER = '\x19TRON Signed Message:\n32';
 const ETH_MESSAGE_HEADER = '\x19Ethereum Signed Message:\n32';
 
 function toHex(value) {
-    return TronWeb.address.toHex(value);
+    return EarthWeb.address.toHex(value);
 }
 
 export default class Trx {
-    constructor(tronWeb = false) {
-        if (!tronWeb || !tronWeb instanceof TronWeb)
-            throw new Error('Expected instance of TronWeb');
+    constructor(earthWeb = false) {
+        if (!earthWeb || !earthWeb instanceof EarthWeb)
+            throw new Error('Expected instance of EarthWeb');
 
-        this.tronWeb = tronWeb;
+        this.earthWeb = earthWeb;
         this.injectPromise = injectpromise(this);
         this.cache = {
             contracts: {}
         }
-        this.validator = new Validator(tronWeb);
+        this.validator = new Validator(earthWeb);
     }
 
     _parseToken(token) {
         return {
             ...token,
-            name: this.tronWeb.toUtf8(token.name),
-            abbr: token.abbr && this.tronWeb.toUtf8(token.abbr),
-            description: token.description && this.tronWeb.toUtf8(token.description),
-            url: token.url && this.tronWeb.toUtf8(token.url)
+            name: this.earthWeb.toUtf8(token.name),
+            abbr: token.abbr && this.earthWeb.toUtf8(token.abbr),
+            description: token.description && this.earthWeb.toUtf8(token.description),
+            url: token.url && this.earthWeb.toUtf8(token.url)
         };
     }
 
@@ -40,7 +40,7 @@ export default class Trx {
         if (!callback)
             return this.injectPromise(this.getCurrentBlock);
 
-        this.tronWeb.fullNode.request('wallet/getnowblock').then(block => {
+        this.earthWeb.fullNode.request('wallet/getnowblock').then(block => {
             callback(null, block);
         }).catch(err => callback(err));
     }
@@ -49,15 +49,15 @@ export default class Trx {
         if (!callback)
             return this.injectPromise(this.getConfirmedCurrentBlock);
 
-        this.tronWeb.solidityNode.request('walletsolidity/getnowblock').then(block => {
+        this.earthWeb.solidityNode.request('walletsolidity/getnowblock').then(block => {
             callback(null, block);
         }).catch(err => callback(err));
     }
 
-    getBlock(block = this.tronWeb.defaultBlock, callback = false) {
+    getBlock(block = this.earthWeb.defaultBlock, callback = false) {
         if (utils.isFunction(block)) {
             callback = block;
-            block = this.tronWeb.defaultBlock;
+            block = this.earthWeb.defaultBlock;
         }
 
         if (!callback)
@@ -82,7 +82,7 @@ export default class Trx {
         if (!callback)
             return this.injectPromise(this.getBlockByHash, blockHash);
 
-        this.tronWeb.fullNode.request('wallet/getblockbyid', {
+        this.earthWeb.fullNode.request('wallet/getblockbyid', {
             value: blockHash
         }, 'post').then(block => {
             if (!Object.keys(block).length)
@@ -99,7 +99,7 @@ export default class Trx {
         if (!utils.isInteger(blockID) || blockID < 0)
             return callback('Invalid block number provided');
 
-        this.tronWeb.fullNode.request('wallet/getblockbynum', {
+        this.earthWeb.fullNode.request('wallet/getblockbynum', {
             num: parseInt(blockID)
         }, 'post').then(block => {
             if (!Object.keys(block).length)
@@ -109,10 +109,10 @@ export default class Trx {
         }).catch(err => callback(err));
     }
 
-    getBlockTransactionCount(block = this.tronWeb.defaultBlock, callback = false) {
+    getBlockTransactionCount(block = this.earthWeb.defaultBlock, callback = false) {
         if (utils.isFunction(block)) {
             callback = block;
-            block = this.tronWeb.defaultBlock;
+            block = this.earthWeb.defaultBlock;
         }
 
         if (!callback)
@@ -123,7 +123,7 @@ export default class Trx {
         }).catch(err => callback(err));
     }
 
-    getTransactionFromBlock(block = this.tronWeb.defaultBlock, index, callback = false) {
+    getTransactionFromBlock(block = this.earthWeb.defaultBlock, index, callback = false) {
         if (utils.isFunction(index)) {
             callback = index;
             index = 0;
@@ -131,7 +131,7 @@ export default class Trx {
 
         if (utils.isFunction(block)) {
             callback = block;
-            block = this.tronWeb.defaultBlock;
+            block = this.earthWeb.defaultBlock;
         }
 
         if (!callback)
@@ -154,7 +154,7 @@ export default class Trx {
         if (!callback)
             return this.injectPromise(this.getTransaction, transactionID);
 
-        this.tronWeb.fullNode.request('wallet/gettransactionbyid', {
+        this.earthWeb.fullNode.request('wallet/gettransactionbyid', {
             value: transactionID
         }, 'post').then(transaction => {
             if (!Object.keys(transaction).length)
@@ -168,7 +168,7 @@ export default class Trx {
         if (!callback)
             return this.injectPromise(this.getConfirmedTransaction, transactionID);
 
-        this.tronWeb.solidityNode.request('walletsolidity/gettransactionbyid', {
+        this.earthWeb.solidityNode.request('walletsolidity/gettransactionbyid', {
             value: transactionID
         }, 'post').then(transaction => {
             if (!Object.keys(transaction).length)
@@ -190,14 +190,14 @@ export default class Trx {
         if (!callback)
             return this.injectPromise(this._getTransactionInfoById, transactionID, options);
 
-        this.tronWeb[options.confirmed ? 'solidityNode' : 'fullNode'].request(`wallet${options.confirmed ? 'solidity' : ''}/gettransactioninfobyid`, {
+        this.earthWeb[options.confirmed ? 'solidityNode' : 'fullNode'].request(`wallet${options.confirmed ? 'solidity' : ''}/gettransactioninfobyid`, {
             value: transactionID
         }, 'post').then(transaction => {
             callback(null, transaction);
         }).catch(err => callback(err));
     }
 
-    getTransactionsToAddress(address = this.tronWeb.defaultAddress.hex, limit = 30, offset = 0, callback = false) {
+    getTransactionsToAddress(address = this.earthWeb.defaultAddress.hex, limit = 30, offset = 0, callback = false) {
         if (utils.isFunction(offset)) {
             callback = offset;
             offset = 0;
@@ -211,12 +211,12 @@ export default class Trx {
         if (!callback)
             return this.injectPromise(this.getTransactionsToAddress, address, limit, offset);
 
-        address = this.tronWeb.address.toHex(address);
+        address = this.earthWeb.address.toHex(address);
 
         return this.getTransactionsRelated(address, 'to', limit, offset, callback);
     }
 
-    getTransactionsFromAddress(address = this.tronWeb.defaultAddress.hex, limit = 30, offset = 0, callback = false) {
+    getTransactionsFromAddress(address = this.earthWeb.defaultAddress.hex, limit = 30, offset = 0, callback = false) {
         if (utils.isFunction(offset)) {
             callback = offset;
             offset = 0;
@@ -230,12 +230,12 @@ export default class Trx {
         if (!callback)
             return this.injectPromise(this.getTransactionsFromAddress, address, limit, offset);
 
-        address = this.tronWeb.address.toHex(address);
+        address = this.earthWeb.address.toHex(address);
 
         return this.getTransactionsRelated(address, 'from', limit, offset, callback);
     }
 
-    async getTransactionsRelated(address = this.tronWeb.defaultAddress.hex, direction = 'all', limit = 30, offset = 0, callback = false) {
+    async getTransactionsRelated(address = this.earthWeb.defaultAddress.hex, direction = 'all', limit = 30, offset = 0, callback = false) {
         if (utils.isFunction(offset)) {
             callback = offset;
             offset = 0;
@@ -253,7 +253,7 @@ export default class Trx {
 
         if (utils.isFunction(address)) {
             callback = address;
-            address = this.tronWeb.defaultAddress.hex;
+            address = this.earthWeb.defaultAddress.hex;
         }
 
         if (!callback)
@@ -280,7 +280,7 @@ export default class Trx {
             }
         }
 
-        if (!this.tronWeb.isAddress(address))
+        if (!this.earthWeb.isAddress(address))
             return callback('Invalid address provided');
 
         if (!utils.isInteger(limit) || limit < 0 || (offset && limit < 1))
@@ -289,9 +289,9 @@ export default class Trx {
         if (!utils.isInteger(offset) || offset < 0)
             return callback('Invalid offset provided');
 
-        address = this.tronWeb.address.toHex(address);
+        address = this.earthWeb.address.toHex(address);
 
-        this.tronWeb.solidityNode.request(`walletextension/gettransactions${direction}this`, {
+        this.earthWeb.solidityNode.request(`walletextension/gettransactions${direction}this`, {
             account: {
                 address
             },
@@ -302,21 +302,21 @@ export default class Trx {
         }).catch(err => callback(err));
     }
 
-    getAccount(address = this.tronWeb.defaultAddress.hex, callback = false) {
+    getAccount(address = this.earthWeb.defaultAddress.hex, callback = false) {
         if (utils.isFunction(address)) {
             callback = address;
-            address = this.tronWeb.defaultAddress.hex;
+            address = this.earthWeb.defaultAddress.hex;
         }
 
         if (!callback)
             return this.injectPromise(this.getAccount, address);
 
-        if (!this.tronWeb.isAddress(address))
+        if (!this.earthWeb.isAddress(address))
             return callback('Invalid address provided');
 
-        address = this.tronWeb.address.toHex(address);
+        address = this.earthWeb.address.toHex(address);
 
-        this.tronWeb.solidityNode.request('walletsolidity/getaccount', {
+        this.earthWeb.solidityNode.request('walletsolidity/getaccount', {
             address
         }, 'post').then(account => {
             callback(null, account);
@@ -351,17 +351,17 @@ export default class Trx {
             id = id.slice(2);
         }
 
-        this.tronWeb[options.confirmed ? 'solidityNode' : 'fullNode'].request(`wallet${options.confirmed ? 'solidity' : ''}/getaccountbyid`, {
+        this.earthWeb[options.confirmed ? 'solidityNode' : 'fullNode'].request(`wallet${options.confirmed ? 'solidity' : ''}/getaccountbyid`, {
             account_id: id
         }, 'post').then(account => {
             callback(null, account);
         }).catch(err => callback(err));
     }
 
-    getBalance(address = this.tronWeb.defaultAddress.hex, callback = false) {
+    getBalance(address = this.earthWeb.defaultAddress.hex, callback = false) {
         if (utils.isFunction(address)) {
             callback = address;
-            address = this.tronWeb.defaultAddress.hex;
+            address = this.earthWeb.defaultAddress.hex;
         }
 
         if (!callback)
@@ -372,21 +372,21 @@ export default class Trx {
         }).catch(err => callback(err));
     }
 
-    getUnconfirmedAccount(address = this.tronWeb.defaultAddress.hex, callback = false) {
+    getUnconfirmedAccount(address = this.earthWeb.defaultAddress.hex, callback = false) {
         if (utils.isFunction(address)) {
             callback = address;
-            address = this.tronWeb.defaultAddress.hex;
+            address = this.earthWeb.defaultAddress.hex;
         }
 
         if (!callback)
             return this.injectPromise(this.getUnconfirmedAccount, address);
 
-        if (!this.tronWeb.isAddress(address))
+        if (!this.earthWeb.isAddress(address))
             return callback('Invalid address provided');
 
-        address = this.tronWeb.address.toHex(address);
+        address = this.earthWeb.address.toHex(address);
 
-        this.tronWeb.fullNode.request('wallet/getaccount', {
+        this.earthWeb.fullNode.request('wallet/getaccount', {
             address
         }, 'post').then(account => {
             callback(null, account);
@@ -400,10 +400,10 @@ export default class Trx {
         this.getAccountInfoById(id, {confirmed: false}, callback);
     }
 
-    getUnconfirmedBalance(address = this.tronWeb.defaultAddress.hex, callback = false) {
+    getUnconfirmedBalance(address = this.earthWeb.defaultAddress.hex, callback = false) {
         if (utils.isFunction(address)) {
             callback = address;
-            address = this.tronWeb.defaultAddress.hex;
+            address = this.earthWeb.defaultAddress.hex;
         }
 
         if (!callback)
@@ -414,42 +414,42 @@ export default class Trx {
         }).catch(err => callback(err));
     }
 
-    getBandwidth(address = this.tronWeb.defaultAddress.hex, callback = false) {
+    getBandwidth(address = this.earthWeb.defaultAddress.hex, callback = false) {
         if (utils.isFunction(address)) {
             callback = address;
-            address = this.tronWeb.defaultAddress.hex;
+            address = this.earthWeb.defaultAddress.hex;
         }
 
         if (!callback)
             return this.injectPromise(this.getBandwidth, address);
 
-        if (!this.tronWeb.isAddress(address))
+        if (!this.earthWeb.isAddress(address))
             return callback('Invalid address provided');
 
-        address = this.tronWeb.address.toHex(address);
+        address = this.earthWeb.address.toHex(address);
 
-        this.tronWeb.fullNode.request('wallet/getaccountnet', {
+        this.earthWeb.fullNode.request('wallet/getaccountnet', {
             address
         }, 'post').then(({freeNetUsed = 0, freeNetLimit = 0, NetUsed = 0, NetLimit = 0}) => {
             callback(null, (freeNetLimit - freeNetUsed) + (NetLimit - NetUsed));
         }).catch(err => callback(err));
     }
 
-    getTokensIssuedByAddress(address = this.tronWeb.defaultAddress.hex, callback = false) {
+    getTokensIssuedByAddress(address = this.earthWeb.defaultAddress.hex, callback = false) {
         if (utils.isFunction(address)) {
             callback = address;
-            address = this.tronWeb.defaultAddress.hex;
+            address = this.earthWeb.defaultAddress.hex;
         }
 
         if (!callback)
             return this.injectPromise(this.getTokensIssuedByAddress, address);
 
-        if (!this.tronWeb.isAddress(address))
+        if (!this.earthWeb.isAddress(address))
             return callback('Invalid address provided');
 
-        address = this.tronWeb.address.toHex(address);
+        address = this.earthWeb.address.toHex(address);
 
-        this.tronWeb.fullNode.request('wallet/getassetissuebyaccount', {
+        this.earthWeb.fullNode.request('wallet/getassetissuebyaccount', {
             address
         }, 'post').then(({assetIssue = false}) => {
             if (!assetIssue)
@@ -475,8 +475,8 @@ export default class Trx {
         if (!utils.isString(tokenID) || !tokenID.length)
             return callback('Invalid token ID provided');
 
-        this.tronWeb.fullNode.request('wallet/getassetissuebyname', {
-            value: this.tronWeb.fromUtf8(tokenID)
+        this.earthWeb.fullNode.request('wallet/getassetissuebyname', {
+            value: this.earthWeb.fromUtf8(tokenID)
         }, 'post').then(token => {
             if (!token.name)
                 return callback('Token does not exist');
@@ -489,9 +489,9 @@ export default class Trx {
         if (!callback)
             return this.injectPromise(this.listNodes);
 
-        this.tronWeb.fullNode.request('wallet/listnodes').then(({nodes = []}) => {
+        this.earthWeb.fullNode.request('wallet/listnodes').then(({nodes = []}) => {
             callback(null, nodes.map(({address: {host, port}}) => (
-                `${this.tronWeb.toUtf8(host)}:${port}`
+                `${this.earthWeb.toUtf8(host)}:${port}`
             )));
         }).catch(err => callback(err));
     }
@@ -516,7 +516,7 @@ export default class Trx {
         if (!utils.isInteger(end) || end <= start)
             return callback('Invalid end of range provided');
 
-        this.tronWeb.fullNode.request('wallet/getblockbylimitnext', {
+        this.earthWeb.fullNode.request('wallet/getblockbylimitnext', {
             startNum: parseInt(start),
             endNum: parseInt(end) + 1
         }, 'post').then(({block = []}) => {
@@ -528,7 +528,7 @@ export default class Trx {
         if (!callback)
             return this.injectPromise(this.listSuperRepresentatives);
 
-        this.tronWeb.fullNode.request('wallet/listwitnesses').then(({witnesses = []}) => {
+        this.earthWeb.fullNode.request('wallet/listwitnesses').then(({witnesses = []}) => {
             callback(null, witnesses);
         }).catch(err => callback(err));
     }
@@ -554,12 +554,12 @@ export default class Trx {
             return callback('Invalid offset provided');
 
         if (!limit) {
-            return this.tronWeb.fullNode.request('wallet/getassetissuelist').then(({assetIssue = []}) => {
+            return this.earthWeb.fullNode.request('wallet/getassetissuelist').then(({assetIssue = []}) => {
                 callback(null, assetIssue.map(token => this._parseToken(token)));
             }).catch(err => callback(err));
         }
 
-        this.tronWeb.fullNode.request('wallet/getpaginatedassetissuelist', {
+        this.earthWeb.fullNode.request('wallet/getpaginatedassetissuelist', {
             offset: parseInt(offset),
             limit: parseInt(limit)
         }, 'post').then(({assetIssue = []}) => {
@@ -571,7 +571,7 @@ export default class Trx {
         if (!callback)
             return this.injectPromise(this.timeUntilNextVoteCycle);
 
-        this.tronWeb.fullNode.request('wallet/getnextmaintenancetime').then(({num = -1}) => {
+        this.earthWeb.fullNode.request('wallet/getnextmaintenancetime').then(({num = -1}) => {
             if (num == -1)
                 return callback('Failed to get time until next vote cycle');
 
@@ -583,7 +583,7 @@ export default class Trx {
         if (!callback)
             return this.injectPromise(this.getContract, contractAddress);
 
-        if (!this.tronWeb.isAddress(contractAddress))
+        if (!this.earthWeb.isAddress(contractAddress))
             return callback('Invalid contract address provided');
 
         if (this.cache.contracts[contractAddress]) {
@@ -591,9 +591,9 @@ export default class Trx {
             return;
         }
 
-        contractAddress = this.tronWeb.address.toHex(contractAddress);
+        contractAddress = this.earthWeb.address.toHex(contractAddress);
 
-        this.tronWeb.fullNode.request('wallet/getcontract', {
+        this.earthWeb.fullNode.request('wallet/getcontract', {
             value: contractAddress
         }).then(contract => {
             if (contract.Error)
@@ -603,10 +603,10 @@ export default class Trx {
         }).catch(err => callback(err));
     }
 
-    async verifyMessage(message = false, signature = false, address = this.tronWeb.defaultAddress.base58, useTronHeader = true, callback = false) {
+    async verifyMessage(message = false, signature = false, address = this.earthWeb.defaultAddress.base58, useTronHeader = true, callback = false) {
         if (utils.isFunction(address)) {
             callback = address;
-            address = this.tronWeb.defaultAddress.base58;
+            address = this.earthWeb.defaultAddress.base58;
             useTronHeader = true;
         }
 
@@ -643,12 +643,12 @@ export default class Trx {
         });
 
         const tronAddress = ADDRESS_PREFIX + recovered.substr(2);
-        const base58Address = TronWeb.address.fromHex(tronAddress);
+        const base58Address = EarthWeb.address.fromHex(tronAddress);
 
-        return base58Address == TronWeb.address.fromHex(address);
+        return base58Address == EarthWeb.address.fromHex(address);
     }
 
-    async sign(transaction = false, privateKey = this.tronWeb.defaultPrivateKey, useTronHeader = true, multisig = false, callback = false) {
+    async sign(transaction = false, privateKey = this.earthWeb.defaultPrivateKey, useTronHeader = true, multisig = false, callback = false) {
 
         if (utils.isFunction(multisig)) {
             callback = multisig;
@@ -663,7 +663,7 @@ export default class Trx {
 
         if (utils.isFunction(privateKey)) {
             callback = privateKey;
-            privateKey = this.tronWeb.defaultPrivateKey;
+            privateKey = this.earthWeb.defaultPrivateKey;
             useTronHeader = true;
             multisig = false;
         }
@@ -694,8 +694,8 @@ export default class Trx {
 
         try {
             if (!multisig) {
-                const address = this.tronWeb.address.toHex(
-                    this.tronWeb.address.fromPrivateKey(privateKey)
+                const address = this.earthWeb.address.toHex(
+                    this.earthWeb.address.fromPrivateKey(privateKey)
                 ).toLowerCase();
 
                 if (address !== transaction.raw_data.contract[0].parameter.value.owner_address.toLowerCase())
@@ -730,7 +730,7 @@ export default class Trx {
         return signatureHex
     }
 
-    async multiSign(transaction = false, privateKey = this.tronWeb.defaultPrivateKey, permissionId = false, callback = false) {
+    async multiSign(transaction = false, privateKey = this.earthWeb.defaultPrivateKey, permissionId = false, callback = false) {
 
         if (utils.isFunction(permissionId)) {
             callback = permissionId;
@@ -739,7 +739,7 @@ export default class Trx {
 
         if (utils.isFunction(privateKey)) {
             callback = privateKey;
-            privateKey = this.tronWeb.defaultPrivateKey;
+            privateKey = this.earthWeb.defaultPrivateKey;
             permissionId = 0;
         }
 
@@ -756,7 +756,7 @@ export default class Trx {
             transaction.raw_data.contract[0].Permission_id = permissionId;
 
             // check if private key insides permission list
-            const address = this.tronWeb.address.toHex(this.tronWeb.address.fromPrivateKey(privateKey)).toLowerCase();
+            const address = this.earthWeb.address.toHex(this.earthWeb.address.fromPrivateKey(privateKey)).toLowerCase();
             const signWeight = await this.getSignWeight(transaction, permissionId);
 
             if (signWeight.result.code === 'PERMISSION_ERROR') {
@@ -803,7 +803,7 @@ export default class Trx {
             return callback('Invalid transaction provided');
 
 
-        this.tronWeb.fullNode.request(
+        this.earthWeb.fullNode.request(
             'wallet/getapprovedlist',
             transaction,
             'post'
@@ -834,7 +834,7 @@ export default class Trx {
             return callback('Invalid transaction provided');
 
 
-        this.tronWeb.fullNode.request(
+        this.earthWeb.fullNode.request(
             'wallet/getsignweight',
             transaction,
             'post'
@@ -861,7 +861,7 @@ export default class Trx {
         if (!signedTransaction.signature || !utils.isArray(signedTransaction.signature))
             return callback('Transaction is not signed');
 
-        this.tronWeb.fullNode.request(
+        this.earthWeb.fullNode.request(
             'wallet/broadcasttransaction',
             signedTransaction,
             'post'
@@ -884,15 +884,15 @@ export default class Trx {
         if (!callback)
             return this.injectPromise(this.sendTransaction, to, amount, options);
 
-        if (!this.tronWeb.isAddress(to))
+        if (!this.earthWeb.isAddress(to))
             return callback('Invalid recipient provided');
 
         if (!utils.isInteger(amount) || amount <= 0)
             return callback('Invalid amount provided');
 
         options = {
-            privateKey: this.tronWeb.defaultPrivateKey,
-            address: this.tronWeb.defaultAddress.hex,
+            privateKey: this.earthWeb.defaultPrivateKey,
+            address: this.earthWeb.defaultAddress.hex,
             ...options
         };
 
@@ -900,8 +900,8 @@ export default class Trx {
             return callback('Function requires either a private key or address to be set');
 
         try {
-            const address = options.privateKey ? this.tronWeb.address.fromPrivateKey(options.privateKey) : options.address;
-            const transaction = await this.tronWeb.transactionBuilder.sendTrx(to, amount, address);
+            const address = options.privateKey ? this.earthWeb.address.fromPrivateKey(options.privateKey) : options.address;
+            const transaction = await this.earthWeb.transactionBuilder.sendTrx(to, amount, address);
             const signedTransaction = await this.sign(transaction, options.privateKey || undefined);
             const result = await this.sendRawTransaction(signedTransaction);
 
@@ -923,7 +923,7 @@ export default class Trx {
         if (!callback)
             return this.injectPromise(this.sendToken, to, amount, tokenID, options);
 
-        if (!this.tronWeb.isAddress(to))
+        if (!this.earthWeb.isAddress(to))
             return callback('Invalid recipient provided');
 
         if (!utils.isInteger(amount) || amount <= 0)
@@ -936,8 +936,8 @@ export default class Trx {
             return callback('Invalid token ID provided');
 
         options = {
-            privateKey: this.tronWeb.defaultPrivateKey,
-            address: this.tronWeb.defaultAddress.hex,
+            privateKey: this.earthWeb.defaultPrivateKey,
+            address: this.earthWeb.defaultAddress.hex,
             ...options
         };
 
@@ -945,8 +945,8 @@ export default class Trx {
             return callback('Function requires either a private key or address to be set');
 
         try {
-            const address = options.privateKey ? this.tronWeb.address.fromPrivateKey(options.privateKey) : options.address;
-            const transaction = await this.tronWeb.transactionBuilder.sendToken(to, amount, tokenID, address);
+            const address = options.privateKey ? this.earthWeb.address.fromPrivateKey(options.privateKey) : options.address;
+            const transaction = await this.earthWeb.transactionBuilder.sendToken(to, amount, tokenID, address);
             const signedTransaction = await this.sign(transaction, options.privateKey || undefined);
             const result = await this.sendRawTransaction(signedTransaction);
 
@@ -1003,8 +1003,8 @@ export default class Trx {
             return callback('Invalid duration provided, minimum of 3 days');
 
         options = {
-            privateKey: this.tronWeb.defaultPrivateKey,
-            address: this.tronWeb.defaultAddress.hex,
+            privateKey: this.earthWeb.defaultPrivateKey,
+            address: this.earthWeb.defaultAddress.hex,
             ...options
         };
 
@@ -1012,8 +1012,8 @@ export default class Trx {
             return callback('Function requires either a private key or address to be set');
 
         try {
-            const address = options.privateKey ? this.tronWeb.address.fromPrivateKey(options.privateKey) : options.address;
-            const freezeBalance = await this.tronWeb.transactionBuilder.freezeBalance(amount, duration, resource, address, receiverAddress);
+            const address = options.privateKey ? this.earthWeb.address.fromPrivateKey(options.privateKey) : options.address;
+            const freezeBalance = await this.earthWeb.transactionBuilder.freezeBalance(amount, duration, resource, address, receiverAddress);
             const signedTransaction = await this.sign(freezeBalance, options.privateKey || undefined);
             const result = await this.sendRawTransaction(signedTransaction);
 
@@ -1057,8 +1057,8 @@ export default class Trx {
             return callback('Invalid resource provided: Expected "BANDWIDTH" or "ENERGY"');
 
         options = {
-            privateKey: this.tronWeb.defaultPrivateKey,
-            address: this.tronWeb.defaultAddress.hex,
+            privateKey: this.earthWeb.defaultPrivateKey,
+            address: this.earthWeb.defaultAddress.hex,
             ...options
         };
 
@@ -1066,8 +1066,8 @@ export default class Trx {
             return callback('Function requires either a private key or address to be set');
 
         try {
-            const address = options.privateKey ? this.tronWeb.address.fromPrivateKey(options.privateKey) : options.address;
-            const unfreezeBalance = await this.tronWeb.transactionBuilder.unfreezeBalance(resource, address, receiverAddress);
+            const address = options.privateKey ? this.earthWeb.address.fromPrivateKey(options.privateKey) : options.address;
+            const unfreezeBalance = await this.earthWeb.transactionBuilder.unfreezeBalance(resource, address, receiverAddress);
             const signedTransaction = await this.sign(unfreezeBalance, options.privateKey || undefined);
             const result = await this.sendRawTransaction(signedTransaction);
 
@@ -1105,8 +1105,8 @@ export default class Trx {
         }
 
         options = {
-            privateKey: this.tronWeb.defaultPrivateKey,
-            address: this.tronWeb.defaultAddress.hex,
+            privateKey: this.earthWeb.defaultPrivateKey,
+            address: this.earthWeb.defaultAddress.hex,
             ...options
         };
 
@@ -1114,8 +1114,8 @@ export default class Trx {
             return callback('Function requires either a private key or address to be set');
 
         try {
-            const address = options.privateKey ? this.tronWeb.address.fromPrivateKey(options.privateKey) : options.address;
-            const updateAccount = await this.tronWeb.transactionBuilder.updateAccount(accountName, address);
+            const address = options.privateKey ? this.earthWeb.address.fromPrivateKey(options.privateKey) : options.address;
+            const updateAccount = await this.earthWeb.transactionBuilder.updateAccount(accountName, address);
             const signedTransaction = await this.sign(updateAccount, options.privateKey || undefined);
             const result = await this.sendRawTransaction(signedTransaction);
 
@@ -1159,7 +1159,7 @@ export default class Trx {
         if (!utils.isInteger(proposalID) || proposalID < 0)
             return callback('Invalid proposalID provided');
 
-        this.tronWeb.fullNode.request('wallet/getproposalbyid', {
+        this.earthWeb.fullNode.request('wallet/getproposalbyid', {
             id: parseInt(proposalID),
         }, 'post').then(proposal => {
             callback(null, proposal);
@@ -1173,7 +1173,7 @@ export default class Trx {
         if (!callback)
             return this.injectPromise(this.listProposals);
 
-        this.tronWeb.fullNode.request('wallet/listproposals', {}, 'post').then(({proposals = []}) => {
+        this.earthWeb.fullNode.request('wallet/listproposals', {}, 'post').then(({proposals = []}) => {
             callback(null, proposals);
         }).catch(err => callback(err));
     }
@@ -1185,7 +1185,7 @@ export default class Trx {
         if (!callback)
             return this.injectPromise(this.getChainParameters);
 
-        this.tronWeb.fullNode.request('wallet/getchainparameters', {}, 'post').then(({chainParameter = []}) => {
+        this.earthWeb.fullNode.request('wallet/getchainparameters', {}, 'post').then(({chainParameter = []}) => {
             callback(null, chainParameter);
         }).catch(err => callback(err));
     }
@@ -1193,15 +1193,15 @@ export default class Trx {
     /**
      * Get the account resources
      */
-    getAccountResources(address = this.tronWeb.defaultAddress.hex, callback = false) {
+    getAccountResources(address = this.earthWeb.defaultAddress.hex, callback = false) {
         if (!callback)
             return this.injectPromise(this.getAccountResources, address);
 
-        if (!this.tronWeb.isAddress(address))
+        if (!this.earthWeb.isAddress(address))
             return callback('Invalid address provided');
 
-        this.tronWeb.fullNode.request('wallet/getaccountresource', {
-            address: this.tronWeb.address.toHex(address),
+        this.earthWeb.fullNode.request('wallet/getaccountresource', {
+            address: this.earthWeb.address.toHex(address),
         }, 'post').then(resources => {
             callback(null, resources);
         }).catch(err => callback(err));
@@ -1217,7 +1217,7 @@ export default class Trx {
         if (!utils.isInteger(exchangeID) || exchangeID < 0)
             return callback('Invalid exchangeID provided');
 
-        this.tronWeb.fullNode.request('wallet/getexchangebyid', {
+        this.earthWeb.fullNode.request('wallet/getexchangebyid', {
             id: exchangeID,
         }, 'post').then(exchange => {
             callback(null, exchange);
@@ -1231,7 +1231,7 @@ export default class Trx {
         if (!callback)
             return this.injectPromise(this.listExchanges);
 
-        this.tronWeb.fullNode.request('wallet/listexchanges', {}, 'post').then(({exchanges = []}) => {
+        this.earthWeb.fullNode.request('wallet/listexchanges', {}, 'post').then(({exchanges = []}) => {
             callback(null, exchanges);
         }, 'post').catch(err => callback(err));
     }
@@ -1251,7 +1251,7 @@ export default class Trx {
         if (!callback)
             return this.injectPromise(this.listExchanges);
 
-        this.tronWeb.fullNode.request('wallet/listexchangespaginated', {
+        this.earthWeb.fullNode.request('wallet/listexchangespaginated', {
             limit,
             offset
         }, 'post').then(({exchanges = []}) => {
@@ -1266,7 +1266,7 @@ export default class Trx {
         if (!callback)
             return this.injectPromise(this.getNodeInfo);
 
-        this.tronWeb.fullNode.request('wallet/getnodeinfo', {}, 'post').then(info => {
+        this.earthWeb.fullNode.request('wallet/getnodeinfo', {}, 'post').then(info => {
             callback(null, info);
         }, 'post').catch(err => callback(err));
     }
@@ -1282,8 +1282,8 @@ export default class Trx {
         if (!utils.isString(tokenID) || !tokenID.length)
             return callback('Invalid token ID provided');
 
-        this.tronWeb.fullNode.request('wallet/getassetissuelistbyname', {
-            value: this.tronWeb.fromUtf8(tokenID)
+        this.earthWeb.fullNode.request('wallet/getassetissuelistbyname', {
+            value: this.earthWeb.fromUtf8(tokenID)
         }, 'post').then(token => {
             if (!token.name)
                 return callback('Token does not exist');
@@ -1302,7 +1302,7 @@ export default class Trx {
         if (!utils.isString(tokenID) || !tokenID.length)
             return callback('Invalid token ID provided');
 
-        this.tronWeb.fullNode.request('wallet/getassetissuebyid', {
+        this.earthWeb.fullNode.request('wallet/getassetissuebyid', {
             value: tokenID
         }, 'post').then(token => {
             if (!token.name)
@@ -1332,7 +1332,7 @@ export default class Trx {
         return this._getBrokerage(address, options, callback);
     }
 
-    async _getReward(address = this.tronWeb.defaultAddress.hex, options, callback = false) {
+    async _getReward(address = this.earthWeb.defaultAddress.hex, options, callback = false) {
         if (utils.isFunction(options)) {
             callback = options;
             options = {};
@@ -1340,10 +1340,10 @@ export default class Trx {
 
         if (utils.isFunction(address)) {
             callback = address;
-            address = this.tronWeb.defaultAddress.hex;
+            address = this.earthWeb.defaultAddress.hex;
         } else if (utils.isObject(address)) {
             options = address;
-            address = this.tronWeb.defaultAddress.hex;
+            address = this.earthWeb.defaultAddress.hex;
         }
 
         if (!callback)
@@ -1362,7 +1362,7 @@ export default class Trx {
             address: toHex(address)
         };
 
-        this.tronWeb[options.confirmed ? 'solidityNode' : 'fullNode'].request(`wallet${options.confirmed ? 'solidity' : ''}/getReward`, data, 'post')
+        this.earthWeb[options.confirmed ? 'solidityNode' : 'fullNode'].request(`wallet${options.confirmed ? 'solidity' : ''}/getReward`, data, 'post')
             .then((result = {}) => {
 
                 if (typeof result.reward === 'undefined')
@@ -1373,7 +1373,7 @@ export default class Trx {
     }
 
 
-    async _getBrokerage(address = this.tronWeb.defaultAddress.hex, options, callback = false) {
+    async _getBrokerage(address = this.earthWeb.defaultAddress.hex, options, callback = false) {
         if (utils.isFunction(options)) {
             callback = options;
             options = {};
@@ -1381,10 +1381,10 @@ export default class Trx {
 
         if (utils.isFunction(address)) {
             callback = address;
-            address = this.tronWeb.defaultAddress.hex;
+            address = this.earthWeb.defaultAddress.hex;
         } else if (utils.isObject(address)) {
             options = address;
-            address = this.tronWeb.defaultAddress.hex;
+            address = this.earthWeb.defaultAddress.hex;
         }
 
         if (!callback)
@@ -1403,7 +1403,7 @@ export default class Trx {
             address: toHex(address)
         };
 
-        this.tronWeb[options.confirmed ? 'solidityNode' : 'fullNode'].request(`wallet${options.confirmed ? 'solidity' : ''}/getBrokerage`, data, 'post')
+        this.earthWeb[options.confirmed ? 'solidityNode' : 'fullNode'].request(`wallet${options.confirmed ? 'solidity' : ''}/getBrokerage`, data, 'post')
             .then((result = {}) => {
 
                 if (typeof result.brokerage === 'undefined')

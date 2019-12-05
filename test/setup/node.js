@@ -1,1 +1,1 @@
-module.exports = require('../../dist/TronWeb.node');
+module.exports = require("../../dist/EarthWeb.node");

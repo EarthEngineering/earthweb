@@ -2,7 +2,7 @@
 node_modules
 .DS_Store
 package-lock.json
-test/setup/TronWeb.js
+test/setup/EarthWeb.js
 coverage
 yarn-error.log
 /dist
