@@ -52,9 +52,7 @@ export default class HttpProvider {
     }
 
     request(url, payload = {}, method = "get") {
-        console.log("method", method);
         method = method.toLowerCase();
-        console.log("payload", payload);
 
         return this.instance
             .request({
