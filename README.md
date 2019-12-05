@@ -1,7 +1,5 @@
 ## What is EarthWeb?
 
-**[EARTH Web - Developer Document](https://www.earth.engineering)**
-
 EarthWeb aims to deliver a unified, seamless development experience influenced by Ethereum's [Web3](https://github.com/ethereum/web3.js/) implementation. We have taken the core ideas and expanded upon it to unlock the functionality of EARTH's unique feature set along with offering new tools for integrating DApps in the browser, Node.js and IoT devices.
 
 ## Compatibility
