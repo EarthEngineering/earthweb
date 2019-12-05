@@ -42,31 +42,24 @@ export default class TransactionBuilder {
     }
 
     sendTrx(to = false, amount = 0, from = this.earthWeb.defaultAddress.hex, options, callback = false) {
-        console.log("AAAAAAA")
         if (utils.isFunction(options)) {
             callback = options;
             options = {};
         }
-        console.log("BBBBBBA")
 
         if (utils.isFunction(from)) {
-        console.log("CCCCCCA")
             callback = from;
             from = this.earthWeb.defaultAddress.hex;
         } else if (utils.isObject(from)) {
-        console.log("DDDDDDA")
             options = from;
             from = this.earthWeb.defaultAddress.hex;
         }
 
-        console.log("EEEEEEA")
         if (!callback)
             return this.injectPromise(this.sendTrx, to, amount, from, options);
-        console.log("FFFFFFA")
 
         // accept amounts passed as strings
         amount = parseInt(amount)
-        console.log("GGGGGGG")
 
         if (this.validator.notValid([
             {
@@ -93,18 +86,15 @@ export default class TransactionBuilder {
         ], callback))
             return;
 
-        console.log("HHHHHHH")
         const data = {
             to_address: toHex(to),
             owner_address: toHex(from),
             amount: amount,
         };
 
-        console.log("IIIIIII")
         if (options && options.permissionId) {
             data.Permission_id = options.permissionId;
         }
-        console.log("JJJJJJA")
 
         this.earthWeb.fullNode.request('wallet/createtransaction', data, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
     }
