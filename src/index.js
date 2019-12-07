@@ -87,8 +87,8 @@ export default class EarthWeb extends EventEmitter {
             "fromAscii",
             "toDecimal",
             "fromDecimal",
-            "toSun",
-            "fromSun",
+            "toSol",
+            "fromSol",
             "toBigNumber",
             "isAddress",
             "createAccount",
@@ -363,14 +363,14 @@ export default class EarthWeb extends EventEmitter {
         return number.isLessThan(0) ? "-0x" + result.substr(1) : "0x" + result;
     }
 
-    static fromSun(sun) {
-        const trx = EarthWeb.toBigNumber(sun).div(1_000_000);
-        return utils.isBigNumber(sun) ? trx : trx.toString(10);
+    static fromSol(sol) {
+        const earth = EarthWeb.toBigNumber(sol).div(1_000_000);
+        return utils.isBigNumber(sol) ? earth : earth.toString(10);
     }
 
-    static toSun(trx) {
-        const sun = EarthWeb.toBigNumber(trx).times(1_000_000);
-        return utils.isBigNumber(trx) ? sun : sun.toString(10);
+    static toSol(earth) {
+        const sol = EarthWeb.toBigNumber(earth).times(1_000_000);
+        return utils.isBigNumber(earth) ? sol : sol.toString(10);
     }
 
     static toBigNumber(amount = 0) {

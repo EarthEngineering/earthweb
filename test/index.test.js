@@ -653,19 +653,19 @@ describe("EarthWeb Instance", function() {
         });
     });
 
-    describe("#toSun", function() {
-        it("should convert some trx to sun", function() {
+    describe("#toSol", function() {
+        it("should convert some trx to sol", function() {
             let input = 324;
             let expected = 324e6;
-            assert.equal(EarthWeb.toSun(input), expected);
+            assert.equal(EarthWeb.toSol(input), expected);
         });
     });
 
-    describe("#fromSun", function() {
+    describe("#fromSol", function() {
         it("should convert a negative number to an hex string to a number", function() {
             let input = 3245e6;
             let expected = 3245;
-            assert.equal(EarthWeb.fromSun(input), expected);
+            assert.equal(EarthWeb.fromSol(input), expected);
         });
     });
 
