@@ -5,8 +5,8 @@ import {ADDRESS_PREFIX} from 'utils/address';
 import Validator from "../paramValidator";
 import injectpromise from 'injectpromise';
 
-const TRX_MESSAGE_HEADER = '\x19TRON Signed Message:\n32';
-// it should be: '\x15TRON Signed Message:\n32';
+const EARTH_MESSAGE_HEADER = '\x19EARTH Signed Message:\n32';
+// it should be: '\x19EARTH Signed Message:\n32';
 const ETH_MESSAGE_HEADER = '\x19Ethereum Signed Message:\n32';
 
 function toHex(value) {
@@ -603,35 +603,35 @@ export default class Earth {
         }).catch(err => callback(err));
     }
 
-    async verifyMessage(message = false, signature = false, address = this.earthWeb.defaultAddress.base58, useTronHeader = true, callback = false) {
+    async verifyMessage(message = false, signature = false, address = this.earthWeb.defaultAddress.base58, useEarthHeader = true, callback = false) {
         if (utils.isFunction(address)) {
             callback = address;
             address = this.earthWeb.defaultAddress.base58;
-            useTronHeader = true;
+            useEarthHeader = true;
         }
 
-        if (utils.isFunction(useTronHeader)) {
-            callback = useTronHeader;
-            useTronHeader = true;
+        if (utils.isFunction(useEarthHeader)) {
+            callback = useEarthHeader;
+            useEarthHeader = true;
         }
 
         if (!callback)
-            return this.injectPromise(this.verifyMessage, message, signature, address, useTronHeader);
+            return this.injectPromise(this.verifyMessage, message, signature, address, useEarthHeader);
 
         if (!utils.isHex(message))
             return callback('Expected hex message input');
 
-        if (Trx.verifySignature(message, address, signature, useTronHeader))
+        if (Earth.verifySignature(message, address, signature, useEarthHeader))
             return callback(null, true);
 
         callback('Signature does not match');
     }
 
-    static verifySignature(message, address, signature, useTronHeader = true) {
+    static verifySignature(message, address, signature, useEarthHeader = true) {
         message = message.replace(/^0x/, '');
         signature = signature.replace(/^0x/, '');
         const messageBytes = [
-            ...toUtf8Bytes(useTronHeader ? TRX_MESSAGE_HEADER : ETH_MESSAGE_HEADER),
+            ...toUtf8Bytes(useEarthHeader ? EARTH_MESSAGE_HEADER : ETH_MESSAGE_HEADER),
             ...utils.code.hexStr2byteArray(message)
         ];
 
@@ -642,35 +642,35 @@ export default class Earth {
             s: '0x' + signature.substring(64, 128)
         });
 
-        const tronAddress = ADDRESS_PREFIX + recovered.substr(2);
-        const base58Address = EarthWeb.address.fromHex(tronAddress);
+        const earthAddress = ADDRESS_PREFIX + recovered.substr(2);
+        const base58Address = EarthWeb.address.fromHex(earthAddress);
 
         return base58Address == EarthWeb.address.fromHex(address);
     }
 
-    async sign(transaction = false, privateKey = this.earthWeb.defaultPrivateKey, useTronHeader = true, multisig = false, callback = false) {
+    async sign(transaction = false, privateKey = this.earthWeb.defaultPrivateKey, useEarthHeader = true, multisig = false, callback = false) {
 
         if (utils.isFunction(multisig)) {
             callback = multisig;
             multisig = false;
         }
 
-        if (utils.isFunction(useTronHeader)) {
-            callback = useTronHeader;
-            useTronHeader = true;
+        if (utils.isFunction(useEarthHeader)) {
+            callback = useEarthHeader;
+            useEarthHeader = true;
             multisig = false;
         }
 
         if (utils.isFunction(privateKey)) {
             callback = privateKey;
             privateKey = this.earthWeb.defaultPrivateKey;
-            useTronHeader = true;
+            useEarthHeader = true;
             multisig = false;
         }
 
 
         if (!callback)
-            return this.injectPromise(this.sign, transaction, privateKey, useTronHeader, multisig);
+            return this.injectPromise(this.sign, transaction, privateKey, useEarthHeader, multisig);
 
         // Message signing
         if (utils.isString(transaction)) {
@@ -679,7 +679,7 @@ export default class Earth {
                 return callback('Expected hex message input');
 
             try {
-                const signatureHex = Trx.signString(transaction, privateKey, useTronHeader)
+                const signatureHex = Earth.signString(transaction, privateKey, useEarthHeader)
                 return callback(null, signatureHex);
             } catch (ex) {
                 callback(ex);
@@ -709,11 +709,11 @@ export default class Earth {
         }
     }
 
-    static signString(message, privateKey, useTronHeader = true) {
+    static signString(message, privateKey, useEarthHeader = true) {
         message = message.replace(/^0x/, '');
         const signingKey = new SigningKey(privateKey);
         const messageBytes = [
-            ...toUtf8Bytes(useTronHeader ? TRX_MESSAGE_HEADER : ETH_MESSAGE_HEADER),
+            ...toUtf8Bytes(useEarthHeader ? EARTH_MESSAGE_HEADER : ETH_MESSAGE_HEADER),
             ...utils.code.hexStr2byteArray(message)
         ];
 
@@ -957,8 +957,8 @@ export default class Earth {
     }
 
     /**
-     * Freezes an amount of TRX.
-     * Will give bandwidth OR Energy and TRON Power(voting rights)
+     * Freezes an amount of EARTH.
+     * Will give bandwidth OR Energy and EARTH Power(voting rights)
      * to the owner of the frozen tokens.
      *
      * @param amount - is the number of frozen trx
@@ -1024,8 +1024,8 @@ export default class Earth {
     }
 
     /**
-     * Unfreeze TRX that has passed the minimum freeze duration.
-     * Unfreezing will remove bandwidth and TRON Power.
+     * Unfreeze EARTH that has passed the minimum freeze duration.
+     * Unfreezing will remove bandwidth and EARTH Power.
      *
      * @param resource - is the type, must be either "ENERGY" or "BANDWIDTH"
      * @param options
