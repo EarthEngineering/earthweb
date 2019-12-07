@@ -114,7 +114,6 @@ describe("EarthWeb Instance", function() {
     describe("#fullnodeVersion()", function() {
         it("should verify that the version of the fullNode is available", function() {
             const earthWeb = earthWebBuilder.createInstance();
-            // setTimeout(() => console.log(earthWeb.fullnodeVersion), 500)
             assert.equal(typeof earthWeb.fullnodeVersion, "string");
         });
     });
@@ -654,7 +653,7 @@ describe("EarthWeb Instance", function() {
     });
 
     describe("#toSol", function() {
-        it("should convert some trx to sol", function() {
+        it("should convert some earth to sol", function() {
             let input = 324;
             let expected = 324e6;
             assert.equal(EarthWeb.toSol(input), expected);

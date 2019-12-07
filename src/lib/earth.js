@@ -961,7 +961,7 @@ export default class Earth {
      * Will give bandwidth OR Energy and EARTH Power(voting rights)
      * to the owner of the frozen tokens.
      *
-     * @param amount - is the number of frozen trx
+     * @param amount - is the number of frozen earth 
      * @param duration - is the duration in days to be frozen
      * @param resource - is the type, must be either "ENERGY" or "BANDWIDTH"
      * @param options
@@ -1267,7 +1267,6 @@ export default class Earth {
             return this.injectPromise(this.getNodeInfo);
 
 
-            console.log(this.earthWeb.fullNode);
         this.earthWeb.fullNode.request('wallet/getnodeinfo', {}, 'post').then(info => {
             callback(null, info);
         }, 'post').catch(err => callback(err));

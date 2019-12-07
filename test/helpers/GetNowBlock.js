@@ -30,7 +30,7 @@ class GetNowBlock {
         return {
             requires: "^2.2.4",
             components: {
-                trx: {
+                earth: {
                     // will be overridden
                     getCurrentBlock: this.someMethod,
 

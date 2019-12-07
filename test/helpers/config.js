@@ -30,7 +30,7 @@ module.exports = {
             saleEnd: Date.now() + 60000, // 1 minute
             frozenAmount: 5,
             frozenDuration: 1,
-            trxRatio: 10,
+            earthRatio: 10,
             tokenRatio: 2,
             saleStart: Date.now() + 500,
             freeBandwidth: 100,

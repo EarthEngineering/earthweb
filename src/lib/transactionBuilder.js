@@ -418,7 +418,6 @@ export default class TransactionBuilder {
         options,
         callback = false
     ) {
-        console.log(toHex(address), utils.isObject(url))
         if (utils.isFunction(options)) {
             callback = options;
             options = {};
@@ -446,8 +445,6 @@ export default class TransactionBuilder {
             }
         ], callback))
             return;
-
-        console.log(toHex(address))
 
         const data = {
             owner_address: toHex(address),
@@ -1888,7 +1885,6 @@ export default class TransactionBuilder {
         if (!callback)
             return this.injectPromise(this.updateAccountPermissions, ownerAddress, ownerPermissions, witnessPermissions, activesPermissions);
 
-            console.log("OWNER ADDRESS: ", ownerAddress)
         if (!this.earthWeb.isAddress(ownerAddress))
             return callback('Invalid ownerAddress provided');
 

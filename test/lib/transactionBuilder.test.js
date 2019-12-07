@@ -49,7 +49,7 @@ describe('EarthWeb.transactionBuilder', function () {
 
     describe('#sendEarth()', function () {
 
-        it(`should send 10 trx from default address to accounts[1]`, async function () {
+        it(`should send 10 earth from default address to accounts[1]`, async function () {
             const params = [
                 [accounts.b58[1], 10, {permissionId: 2}],
                 [accounts.b58[1], 10]
@@ -68,7 +68,7 @@ describe('EarthWeb.transactionBuilder', function () {
             }
         });
 
-        it(`should send 10 trx from accounts[0] to accounts[1]`, async function () {
+        it(`should send 10 earth from accounts[0] to accounts[1]`, async function () {
             const params = [
                 [accounts.b58[1], 10, accounts.b58[0], {permissionId: 2}],
                 [accounts.b58[1], 10, accounts.b58[0]]
@@ -119,7 +119,7 @@ describe('EarthWeb.transactionBuilder', function () {
 
             await assertThrow(
                 earthWeb.transactionBuilder.sendEarth(accounts.hex[3], 10, accounts.hex[3]),
-                'Cannot transfer TRX to the same account'
+                'Cannot transfer Earth to the same account'
             );
 
         });
@@ -263,14 +263,14 @@ describe('EarthWeb.transactionBuilder', function () {
 
         });
 
-        it('should throw if TRX ratio is not a positive integer', async function () {
+        it('should throw if Earth ratio is not a positive integer', async function () {
 
             const options = getTokenOptions();
-            options.trxRatio = {};
+            options.earthRatio = {};
 
             await assertThrow(
                 earthWeb.transactionBuilder.createToken(options),
-                'TRX ratio must be a positive integer'
+                'Earth ratio must be a positive integer'
             );
 
         });
@@ -1479,7 +1479,7 @@ describe('EarthWeb.transactionBuilder', function () {
 
     });
 
-    describe("#createTRXExchange", async function () {
+    describe("#createEarthExchange", async function () {
     });
 
     describe("#injectExchangeTokens", async function () {

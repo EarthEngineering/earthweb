@@ -778,7 +778,7 @@ describe('EarthWeb.earth', function () {
             const fromIdx = 19;
             const toIdx = 20;
 
-            it('should send trx', async function () {
+            it('should send earth', async function () {
                 this.timeout(10000);
 
                 const balanceBefore = await earthWeb.earth.getUnconfirmedBalance(accounts.hex[toIdx]);
@@ -810,7 +810,7 @@ describe('EarthWeb.earth', function () {
             const fromIdx = 21;
             const toIdx = 22;
 
-            it('should send trx', async function () {
+            it('should send earth', async function () {
                 this.timeout(10000);
 
                 const balanceBefore = await earthWeb.earth.getUnconfirmedBalance(accounts.hex[toIdx]);
@@ -842,7 +842,7 @@ describe('EarthWeb.earth', function () {
             const fromIdx = 23;
             const toIdx = 24;
 
-            it('should send trx', async function () {
+            it('should send earth', async function () {
                 this.timeout(10000);
 
                 const balanceBefore = await earthWeb.earth.getUnconfirmedBalance(accounts.hex[toIdx]);
@@ -1190,7 +1190,7 @@ describe('EarthWeb.earth', function () {
                 token = await earthWeb.earth.getTokensIssuedByAddress(accounts.hex[fromIdx]);
             });
 
-            it('should send trx by to address and verify account balance', async function () {
+            it('should send earth by to address and verify account balance', async function () {
                 this.timeout(20000);
 
                 const assetBefore = (await earthWeb.earth.getUnconfirmedAccount(accounts.hex[toIdx])).assetV2;
@@ -1274,7 +1274,7 @@ describe('EarthWeb.earth', function () {
                 token = await earthWeb.earth.getTokensIssuedByAddress(accounts.hex[fromIdx]);
             });
 
-            it('should send trx by to address and verify account balance', async function () {
+            it('should send earth by to address and verify account balance', async function () {
                 this.timeout(10000);
 
                 const assetBefore = (await earthWeb.earth.getUnconfirmedAccount(accounts.hex[toIdx])).assetV2;
