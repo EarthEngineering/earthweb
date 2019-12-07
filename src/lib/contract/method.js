@@ -237,7 +237,7 @@ export default class Method {
                 );
 
             // If privateKey is false, this won't be signed here. We assume sign functionality will be replaced.
-            const signedTransaction = await this.earthWeb.trx.sign(
+            const signedTransaction = await this.earthWeb.earth.sign(
                 transaction.transaction,
                 privateKey
             );
@@ -249,7 +249,7 @@ export default class Method {
                 return callback("Invalid private key provided");
             }
 
-            const broadcast = await this.earthWeb.trx.sendRawTransaction(
+            const broadcast = await this.earthWeb.earth.sendRawTransaction(
                 signedTransaction
             );
 
@@ -274,7 +274,7 @@ export default class Method {
                     });
                 }
 
-                const output = await this.earthWeb.trx.getTransactionInfo(
+                const output = await this.earthWeb.earth.getTransactionInfo(
                     signedTransaction.txID
                 );
 

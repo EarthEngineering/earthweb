@@ -38,7 +38,7 @@ module.exports = {
         };
     },
     isProposalApproved: async (earthWeb, proposal) => {
-        let chainParameters = await earthWeb.trx.getChainParameters();
+        let chainParameters = await earthWeb.earth.getChainParameters();
         for (let param of chainParameters) {
             if (param.key === proposal) {
                 return param.value;

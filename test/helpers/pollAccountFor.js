@@ -16,7 +16,7 @@ module.exports = async function pollAccountFor(
             throw new Error("Timeout...");
         }
         wait(interval);
-        let result = await earthWeb.trx.getAccount(address);
+        let result = await earthWeb.earth.getAccount(address);
         if (typeof property === "string") {
             let data = _.get(result, property);
             if (data) {

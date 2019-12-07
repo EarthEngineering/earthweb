@@ -182,11 +182,11 @@ export default class Contract {
                 options,
                 address
             );
-            const signedTransaction = await this.earthWeb.trx.sign(
+            const signedTransaction = await this.earthWeb.earth.sign(
                 transaction,
                 privateKey
             );
-            const contract = await this.earthWeb.trx.sendRawTransaction(
+            const contract = await this.earthWeb.earth.sendRawTransaction(
                 signedTransaction
             );
 
@@ -207,7 +207,7 @@ export default class Contract {
         if (!callback) return this.injectPromise(this.at, contractAddress);
 
         try {
-            const contract = await this.earthWeb.trx.getContract(
+            const contract = await this.earthWeb.earth.getContract(
                 contractAddress
             );
 

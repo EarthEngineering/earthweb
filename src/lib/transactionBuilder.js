@@ -893,8 +893,8 @@ export default class TransactionBuilder {
             owner_address: toHex(ownerAddress)
         };
 
-        if (this.earthWeb.trx.cache.contracts[contractAddress]) {
-            delete this.earthWeb.trx.cache.contracts[contractAddress]
+        if (this.earthWeb.earth.cache.contracts[contractAddress]) {
+            delete this.earthWeb.earth.cache.contracts[contractAddress]
         }
         this.earthWeb.fullNode.request('wallet/clearabi', data, 'post').then(transaction => resultManager(transaction, callback)).catch(err => callback(err));
 

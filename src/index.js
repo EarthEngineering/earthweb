@@ -7,7 +7,7 @@ import semver from "semver";
 import injectpromise from "injectpromise";
 
 import TransactionBuilder from "lib/transactionBuilder";
-import Trx from "lib/trx";
+import Earth from "lib/earth";
 import Contract from "lib/contract";
 import Plugin from "lib/plugin";
 import Event from "lib/event";
@@ -20,7 +20,7 @@ export default class EarthWeb extends EventEmitter {
     static providers = providers;
     static BigNumber = BigNumber;
     static TransactionBuilder = TransactionBuilder;
-    static Trx = Trx;
+    static Earth = Earth;
     static Contract = Contract;
     static Plugin = Plugin;
     static Event = Event;
@@ -60,7 +60,7 @@ export default class EarthWeb extends EventEmitter {
 
         this.event = new Event(this);
         this.transactionBuilder = new TransactionBuilder(this);
-        this.trx = new Trx(this);
+        this.earth = new Earth(this);
         this.plugin = new Plugin(this, options);
         this.utils = utils;
 
@@ -106,7 +106,7 @@ export default class EarthWeb extends EventEmitter {
 
     async getFullnodeVersion() {
         try {
-            const nodeInfo = await this.trx.getNodeInfo();
+            const nodeInfo = await this.earth.getNodeInfo();
             this.fullnodeVersion = nodeInfo.configNodeInfo.codeVersion;
             if (this.fullnodeVersion.split(".").length === 2) {
                 this.fullnodeVersion += ".0";

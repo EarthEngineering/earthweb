@@ -179,9 +179,9 @@ describe('EarthWeb.transactionBuilder', function () {
 
                     await broadcaster(null, accounts.pks[8 + i], transaction)
 
-                    const tokenList = await earthWeb.trx.getTokensIssuedByAddress(accounts.b58[8 + i])
+                    const tokenList = await earthWeb.earth.getTokensIssuedByAddress(accounts.b58[8 + i])
                     const tokenID = tokenList[options.name].id
-                    const token = await earthWeb.trx.getTokenByID(tokenID)
+                    const token = await earthWeb.earth.getTokenByID(tokenID)
 
                     assert.equal(token.vote_score, options.voteScore);
                     assert.equal(token.precision, options.precision);
@@ -565,7 +565,7 @@ describe('EarthWeb.transactionBuilder', function () {
 
             let tokenList
             while (!tokenList) {
-                tokenList = await earthWeb.trx.getTokensIssuedByAddress(accounts.b58[2])
+                tokenList = await earthWeb.earth.getTokensIssuedByAddress(accounts.b58[2])
             }
             if (isAllowSameTokenNameApproved) {
                 tokenID = tokenList[tokenOptions.name].id
@@ -711,7 +711,7 @@ describe('EarthWeb.transactionBuilder', function () {
 
             let tokenList
             while (!tokenList) {
-                tokenList = await earthWeb.trx.getTokensIssuedByAddress(accounts.b58[5])
+                tokenList = await earthWeb.earth.getTokensIssuedByAddress(accounts.b58[5])
             }
             if (isAllowSameTokenNameApproved) {
                 tokenID = tokenList[tokenOptions.name].id
@@ -725,10 +725,10 @@ describe('EarthWeb.transactionBuilder', function () {
 
             let token
             if (isAllowSameTokenNameApproved) {
-                token = await earthWeb.trx.getTokenByID(tokenID)
+                token = await earthWeb.earth.getTokenByID(tokenID)
                 assert.equal(token.id, tokenID)
             } else {
-                token = await earthWeb.trx.getTokenFromID(tokenID)
+                token = await earthWeb.earth.getTokenFromID(tokenID)
             }
             assert.equal(token.name, tokenOptions.name)
         })
@@ -828,7 +828,7 @@ describe('EarthWeb.transactionBuilder', function () {
 
             let tokenList
             while (!tokenList) {
-                tokenList = await earthWeb.trx.getTokensIssuedByAddress(accounts.b58[6])
+                tokenList = await earthWeb.earth.getTokensIssuedByAddress(accounts.b58[6])
             }
 
             if (isAllowSameTokenNameApproved) {
@@ -843,10 +843,10 @@ describe('EarthWeb.transactionBuilder', function () {
 
             let token
             if (isAllowSameTokenNameApproved) {
-                token = await earthWeb.trx.getTokenByID(tokenID)
+                token = await earthWeb.earth.getTokenByID(tokenID)
                 assert.equal(token.id, tokenID)
             } else {
-                token = await earthWeb.trx.getTokenFromID(tokenID)
+                token = await earthWeb.earth.getTokenFromID(tokenID)
             }
             assert.equal(token.name, tokenOptions.name)
         })
@@ -1022,12 +1022,12 @@ describe('EarthWeb.transactionBuilder', function () {
 
             await broadcaster(earthWeb.transactionBuilder.createProposal(parameters, ADDRESS_BASE58), PRIVATE_KEY)
 
-            proposals = await earthWeb.trx.listProposals();
+            proposals = await earthWeb.earth.listProposals();
 
         })
 
         after(async function () {
-            proposals = await earthWeb.trx.listProposals();
+            proposals = await earthWeb.earth.listProposals();
             for (let proposal of proposals) {
                 if (proposal.state !== 'CANCELED')
                     await broadcaster(earthWeb.transactionBuilder.deleteProposal(proposal.proposal_id), PRIVATE_KEY)
@@ -1197,7 +1197,7 @@ describe('EarthWeb.transactionBuilder', function () {
             }, accounts.hex[6]);
             await broadcaster(null, accounts.pks[6], transaction);
             while (true) {
-                const tx = await earthWeb.trx.getTransactionInfo(transaction.txID);
+                const tx = await earthWeb.earth.getTransactionInfo(transaction.txID);
                 if (Object.keys(tx).length === 0) {
                     await wait(3);
                     continue;
@@ -1245,7 +1245,7 @@ describe('EarthWeb.transactionBuilder', function () {
             }, accounts.hex[6]);
             await broadcaster(null, accounts.pks[6], transaction);
             while (true) {
-                const tx = await earthWeb.trx.getTransactionInfo(transaction.txID);
+                const tx = await earthWeb.earth.getTransactionInfo(transaction.txID);
                 if (Object.keys(tx).length === 0) {
                     await wait(3);
                     continue;
@@ -1294,7 +1294,7 @@ describe('EarthWeb.transactionBuilder', function () {
             }, accounts.hex[7]);
             await broadcaster(null, accounts.pks[7], transaction);
             while (true) {
-                const tx = await earthWeb.trx.getTransactionInfo(transaction.txID);
+                const tx = await earthWeb.earth.getTransactionInfo(transaction.txID);
                 if (Object.keys(tx).length === 0) {
                     await wait(3);
                     continue;
@@ -1311,7 +1311,7 @@ describe('EarthWeb.transactionBuilder', function () {
             const ownerAddress = accounts.hex[7];
 
             // verify contract abi before
-            contract = await earthWeb.trx.getContract(contractAddress);
+            contract = await earthWeb.earth.getContract(contractAddress);
             assert.isTrue(Object.keys(contract.abi).length > 0)
 
             // clear abi
@@ -1323,7 +1323,7 @@ describe('EarthWeb.transactionBuilder', function () {
 
             // verify contract abi after
             while (true) {
-                contract = await earthWeb.trx.getContract(contractAddress);
+                contract = await earthWeb.earth.getContract(contractAddress);
                 if (Object.keys(contract.abi).length > 0) {
                     await wait(3);
                     continue;
@@ -1382,7 +1382,7 @@ describe('EarthWeb.transactionBuilder', function () {
             }, accounts.hex[6]);
             await broadcaster(null, accounts.pks[6], transaction);
             while (true) {
-                const tx = await earthWeb.trx.getTransactionInfo(transaction.txID);
+                const tx = await earthWeb.earth.getTransactionInfo(transaction.txID);
                 if (Object.keys(tx).length === 0) {
                     await wait(3);
                     continue;
@@ -1436,7 +1436,7 @@ describe('EarthWeb.transactionBuilder', function () {
                 const transaction = await earthWeb.transactionBuilder.createToken(options, accounts.hex[i]);
                 await broadcaster(null, accounts.pks[i], transaction);
                 await waitChainData('token', accounts.hex[i]);
-                const token = await earthWeb.trx.getTokensIssuedByAddress(accounts.hex[i]);
+                const token = await earthWeb.earth.getTokensIssuedByAddress(accounts.hex[i]);
                 await waitChainData('tokenById', token[Object.keys(token)[0]]['id']);
                 await broadcaster(null, accounts.pks[i], await earthWeb.transactionBuilder.sendToken(
                     accounts.hex[toIdx1],
@@ -1500,7 +1500,7 @@ describe('EarthWeb.transactionBuilder', function () {
                 const receiver = accounts.b58[42]
                 const sender = accounts.hex[43]
                 const privateKey = accounts.pks[43]
-                const balance = await earthWeb.trx.getUnconfirmedBalance(sender);
+                const balance = await earthWeb.earth.getUnconfirmedBalance(sender);
 
                 let transaction = await earthWeb.transactionBuilder.sendTrx(receiver, 10, sender);
                 const previousId = transaction.txID;
@@ -1508,7 +1508,7 @@ describe('EarthWeb.transactionBuilder', function () {
                 await broadcaster(null, privateKey, transaction);
 
                 assert.notEqual(transaction.txID, previousId)
-                assert.equal(balance - await earthWeb.trx.getUnconfirmedBalance(sender), 10);
+                assert.equal(balance - await earthWeb.earth.getUnconfirmedBalance(sender), 10);
 
             });
 
@@ -1523,7 +1523,7 @@ describe('EarthWeb.transactionBuilder', function () {
                 const receiver = accounts.b58[44]
                 const sender = accounts.hex[45]
                 const privateKey = accounts.pks[45]
-                const balance = await earthWeb.trx.getUnconfirmedBalance(sender);
+                const balance = await earthWeb.earth.getUnconfirmedBalance(sender);
 
                 let transaction = await earthWeb.transactionBuilder.sendTrx(receiver, 10, sender);
                 const data = "Sending money to Bill.";
@@ -1531,8 +1531,8 @@ describe('EarthWeb.transactionBuilder', function () {
                 const id = transaction.txID;
                 await broadcaster(null, privateKey, transaction);
                 await waitChainData('tx', id);
-                assert.equal(balance - await earthWeb.trx.getUnconfirmedBalance(sender), 10);
-                const unconfirmedTx = await earthWeb.trx.getTransaction(id)
+                assert.equal(balance - await earthWeb.earth.getUnconfirmedBalance(sender), 10);
+                const unconfirmedTx = await earthWeb.earth.getTransaction(id)
                 assert.equal(earthWeb.toUtf8(unconfirmedTx.raw_data.data), data);
 
             });
@@ -1550,7 +1550,7 @@ describe('EarthWeb.transactionBuilder', function () {
                 const receiver = accounts.b58[40]
                 const sender = accounts.hex[41]
                 const privateKey = accounts.pks[41]
-                // const balance = await earthWeb.trx.getUnconfirmedBalance(sender);
+                // const balance = await earthWeb.earth.getUnconfirmedBalance(sender);
 
                 let transaction = await earthWeb.transactionBuilder.sendTrx(receiver, 10, sender);
                 const previousId = transaction.txID;
@@ -1560,7 +1560,7 @@ describe('EarthWeb.transactionBuilder', function () {
                 assert.notEqual(id, previousId)
                 await broadcaster(null, privateKey, transaction);
                 await waitChainData('tx', id);
-                const unconfirmedTx = await earthWeb.trx.getTransaction(id)
+                const unconfirmedTx = await earthWeb.earth.getTransaction(id)
                 assert.equal(earthWeb.toUtf8(unconfirmedTx.raw_data.data), data);
 
             });

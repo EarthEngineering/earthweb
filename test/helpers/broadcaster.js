@@ -5,11 +5,11 @@ module.exports = async function(func, pk, transaction) {
     if (!transaction) {
         transaction = await func;
     }
-    const signedTransaction = await earthWeb.trx.sign(transaction, pk);
+    const signedTransaction = await earthWeb.earth.sign(transaction, pk);
     const result = {
         transaction,
         signedTransaction,
-        receipt: await earthWeb.trx.sendRawTransaction(signedTransaction)
+        receipt: await earthWeb.earth.sendRawTransaction(signedTransaction)
     };
     return Promise.resolve(result);
 };

@@ -22,7 +22,7 @@ describe("EarthWeb.lib.plugin", async function() {
         });
     });
 
-    describe("#plug GetNowBlock into earthWeb.trx", async function() {
+    describe("#plug GetNowBlock into earthWeb.earth", async function() {
         it("should register the plugin GetNowBlock", async function() {
             const someParameter = "someValue";
 
@@ -33,12 +33,12 @@ describe("EarthWeb.lib.plugin", async function() {
             assert.isTrue(result.plugged.includes("getCurrentBlock"));
             assert.isTrue(result.plugged.includes("getLatestBlock"));
 
-            result = await earthWeb.trx.getCurrentBlock();
+            result = await earthWeb.earth.getCurrentBlock();
             assert.isTrue(result.fromPlugin);
             assert.equal(result.blockID.length, 64);
             assert.isTrue(/^00000/.test(result.blockID));
 
-            result = await earthWeb.trx.getSomeParameter();
+            result = await earthWeb.earth.getSomeParameter();
             assert.equal(result, someParameter);
         });
     });

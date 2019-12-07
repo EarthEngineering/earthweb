@@ -13,7 +13,7 @@ function toHex(value) {
     return EarthWeb.address.toHex(value);
 }
 
-export default class Trx {
+export default class Earth {
     constructor(earthWeb = false) {
         if (!earthWeb || !earthWeb instanceof EarthWeb)
             throw new Error('Expected instance of EarthWeb');
@@ -1266,6 +1266,8 @@ export default class Trx {
         if (!callback)
             return this.injectPromise(this.getNodeInfo);
 
+
+            console.log(this.earthWeb.fullNode);
         this.earthWeb.fullNode.request('wallet/getnodeinfo', {}, 'post').then(info => {
             callback(null, info);
         }, 'post').catch(err => callback(err));

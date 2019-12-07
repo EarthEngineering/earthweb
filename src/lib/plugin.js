@@ -31,7 +31,7 @@ export default class Plugin {
         }
         if (semver.satisfies(EarthWeb.version, pluginInterface.requires)) {
             if (pluginInterface.fullClass) {
-                // plug the entire class at the same level of earthWeb.trx
+                // plug the entire class at the same level of earthWeb.earth
                 let className = plugin.constructor.name;
                 let classInstanceName =
                     className.substring(0, 1).toLowerCase() +
@@ -42,7 +42,7 @@ export default class Plugin {
                     result.libs.push(className);
                 }
             } else {
-                // plug methods into a class, like trx
+                // plug methods into a class, like earth
                 for (let component in pluginInterface.components) {
                     if (!this.earthWeb.hasOwnProperty(component)) {
                         continue;

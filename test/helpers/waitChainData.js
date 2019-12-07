@@ -16,36 +16,40 @@ module.exports = async function(type, ...params) {
         try {
             switch (type) {
                 case "tx": {
-                    data = await earthWeb.trx.getTransaction(params[0]);
+                    data = await earthWeb.earth.getTransaction(params[0]);
                     isFound = !!data.txID;
                     break;
                 }
                 case "account": {
-                    data = await earthWeb.trx.getUnconfirmedAccount(params[0]);
+                    data = await earthWeb.earth.getUnconfirmedAccount(
+                        params[0]
+                    );
                     isFound = !!data.address;
                     break;
                 }
                 case "accountById": {
-                    data = await earthWeb.trx.getUnconfirmedAccountById(
+                    data = await earthWeb.earth.getUnconfirmedAccountById(
                         params[0]
                     );
                     isFound = !!data.address;
                     break;
                 }
                 case "token": {
-                    data = await earthWeb.trx.getTokensIssuedByAddress(
+                    data = await earthWeb.earth.getTokensIssuedByAddress(
                         params[0]
                     );
                     isFound = !!Object.keys(data).length;
                     break;
                 }
                 case "tokenById": {
-                    data = await earthWeb.trx.getTokenFromID(params[0]);
+                    data = await earthWeb.earth.getTokenFromID(params[0]);
                     isFound = !!data.name;
                     break;
                 }
                 case "sendToken": {
-                    data = await earthWeb.trx.getUnconfirmedAccount(params[0]);
+                    data = await earthWeb.earth.getUnconfirmedAccount(
+                        params[0]
+                    );
                     isFound =
                         data &&
                         data.assetV2 &&
@@ -54,19 +58,25 @@ module.exports = async function(type, ...params) {
                     break;
                 }
                 case "balance": {
-                    data = await earthWeb.trx.getUnconfirmedBalance(params[0]);
+                    data = await earthWeb.earth.getUnconfirmedBalance(
+                        params[0]
+                    );
                     isFound = data !== params[1];
                     break;
                 }
                 case "freezeBp": {
-                    data = await earthWeb.trx.getUnconfirmedAccount(params[0]);
+                    data = await earthWeb.earth.getUnconfirmedAccount(
+                        params[0]
+                    );
                     isFound =
                         data.frozen &&
                         data.frozen[0].frozen_balance !== params[1];
                     break;
                 }
                 case "freezeEnergy": {
-                    data = await earthWeb.trx.getUnconfirmedAccount(params[0]);
+                    data = await earthWeb.earth.getUnconfirmedAccount(
+                        params[0]
+                    );
                     isFound =
                         data.account_resource &&
                         data.account_resource.frozen_balance_for_energy &&
@@ -75,12 +85,12 @@ module.exports = async function(type, ...params) {
                     break;
                 }
                 case "contract": {
-                    data = await earthWeb.trx.getContract(params[0]);
+                    data = await earthWeb.earth.getContract(params[0]);
                     isFound = !!data.contract_address;
                     break;
                 }
                 case "exchange": {
-                    data = await earthWeb.trx.getExchangeByID(params[0]);
+                    data = await earthWeb.earth.getExchangeByID(params[0]);
                     isFound = !!data.exchange_id;
                     break;
                 }
