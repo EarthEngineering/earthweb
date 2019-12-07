@@ -47,7 +47,7 @@ describe('EarthWeb.transactionBuilder', function () {
 
     });
 
-    describe('#sendTrx()', function () {
+    describe('#sendEarth()', function () {
 
         it(`should send 10 trx from default address to accounts[1]`, async function () {
             const params = [
@@ -55,7 +55,7 @@ describe('EarthWeb.transactionBuilder', function () {
                 [accounts.b58[1], 10]
             ];
             for (let param of params) {
-                const transaction = await earthWeb.transactionBuilder.sendTrx(...param);
+                const transaction = await earthWeb.transactionBuilder.sendEarth(...param);
 
                 const parameter = txPars(transaction);
 
@@ -74,7 +74,7 @@ describe('EarthWeb.transactionBuilder', function () {
                 [accounts.b58[1], 10, accounts.b58[0]]
             ];
             for (let param of params) {
-                const transaction = await earthWeb.transactionBuilder.sendTrx(...param);
+                const transaction = await earthWeb.transactionBuilder.sendEarth(...param);
                 const parameter = txPars(transaction);
 
                 assert.equal(transaction.txID.length, 64);
@@ -90,7 +90,7 @@ describe('EarthWeb.transactionBuilder', function () {
         it('should throw if an invalid address is passed', async function () {
 
             await assertThrow(
-                earthWeb.transactionBuilder.sendTrx('40f0b27e3d16060a5b0e8e995120e00', 10),
+                earthWeb.transactionBuilder.sendEarth('40f0b27e3d16060a5b0e8e995120e00', 10),
                 'Invalid recipient address provided'
             );
 
@@ -99,7 +99,7 @@ describe('EarthWeb.transactionBuilder', function () {
         it('should throw if an invalid amount is passed', async function () {
 
             await assertThrow(
-                earthWeb.transactionBuilder.sendTrx(accounts.hex[2], -10),
+                earthWeb.transactionBuilder.sendEarth(accounts.hex[2], -10),
                 'Invalid amount provided'
             );
 
@@ -108,7 +108,7 @@ describe('EarthWeb.transactionBuilder', function () {
         it('should throw if an invalid origin address is passed', async function () {
 
             await assertThrow(
-                earthWeb.transactionBuilder.sendTrx(accounts.hex[3], 10, '40f0b27e3d16060a5b0e8e995120e00'),
+                earthWeb.transactionBuilder.sendEarth(accounts.hex[3], 10, '40f0b27e3d16060a5b0e8e995120e00'),
                 'Invalid origin address provided'
             );
 
@@ -118,7 +118,7 @@ describe('EarthWeb.transactionBuilder', function () {
         it('should throw if trying to transfer to itself', async function () {
 
             await assertThrow(
-                earthWeb.transactionBuilder.sendTrx(accounts.hex[3], 10, accounts.hex[3]),
+                earthWeb.transactionBuilder.sendEarth(accounts.hex[3], 10, accounts.hex[3]),
                 'Cannot transfer TRX to the same account'
             );
 
@@ -127,7 +127,7 @@ describe('EarthWeb.transactionBuilder', function () {
         it('should throw if trying to transfer from an account with not enough funds', async function () {
 
             await assertThrow(
-                earthWeb.transactionBuilder.sendTrx(accounts.hex[3], 10, emptyAccount.address.base58),
+                earthWeb.transactionBuilder.sendEarth(accounts.hex[3], 10, emptyAccount.address.base58),
                 null,
                 'ContractValidateException'
             );
@@ -1502,7 +1502,7 @@ describe('EarthWeb.transactionBuilder', function () {
                 const privateKey = accounts.pks[43]
                 const balance = await earthWeb.earth.getUnconfirmedBalance(sender);
 
-                let transaction = await earthWeb.transactionBuilder.sendTrx(receiver, 10, sender);
+                let transaction = await earthWeb.transactionBuilder.sendEarth(receiver, 10, sender);
                 const previousId = transaction.txID;
                 transaction = await earthWeb.transactionBuilder.extendExpiration(transaction, 3600);
                 await broadcaster(null, privateKey, transaction);
@@ -1525,7 +1525,7 @@ describe('EarthWeb.transactionBuilder', function () {
                 const privateKey = accounts.pks[45]
                 const balance = await earthWeb.earth.getUnconfirmedBalance(sender);
 
-                let transaction = await earthWeb.transactionBuilder.sendTrx(receiver, 10, sender);
+                let transaction = await earthWeb.transactionBuilder.sendEarth(receiver, 10, sender);
                 const data = "Sending money to Bill.";
                 transaction = await earthWeb.transactionBuilder.addUpdateData(transaction, data);
                 const id = transaction.txID;
@@ -1552,7 +1552,7 @@ describe('EarthWeb.transactionBuilder', function () {
                 const privateKey = accounts.pks[41]
                 // const balance = await earthWeb.earth.getUnconfirmedBalance(sender);
 
-                let transaction = await earthWeb.transactionBuilder.sendTrx(receiver, 10, sender);
+                let transaction = await earthWeb.transactionBuilder.sendEarth(receiver, 10, sender);
                 const previousId = transaction.txID;
                 const data = "Sending money to Bill.";
                 transaction = await earthWeb.transactionBuilder.alterTransaction(transaction, {data});

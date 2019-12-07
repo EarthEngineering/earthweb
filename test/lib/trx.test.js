@@ -174,7 +174,7 @@ describe('EarthWeb.earth', function () {
 
                 const account = await earthWeb.createAccount();
                 toHex = account.address.hex;
-                const transaction = await earthWeb.transactionBuilder.sendTrx(account.address.hex, 10e5, accounts.hex[idx]);
+                const transaction = await earthWeb.transactionBuilder.sendEarth(account.address.hex, 10e5, accounts.hex[idx]);
                 await broadcaster(null, accounts.pks[idx], transaction);
                 await waitChainData('account', account.address.hex);
             });
@@ -237,7 +237,7 @@ describe('EarthWeb.earth', function () {
 
                 const account = await earthWeb.createAccount();
                 toHex = account.address.hex;
-                const transaction = await earthWeb.transactionBuilder.sendTrx(account.address.hex, 10e5, accounts.hex[idx]);
+                const transaction = await earthWeb.transactionBuilder.sendEarth(account.address.hex, 10e5, accounts.hex[idx]);
                 await broadcaster(null, accounts.pks[idx], transaction);
                 await waitChainData('account', account.address.hex);
             });
@@ -837,7 +837,7 @@ describe('EarthWeb.earth', function () {
         });
 
 
-        describe("#sendTrx", async function () {
+        describe("#sendEarth", async function () {
 
             const fromIdx = 23;
             const toIdx = 24;
@@ -846,7 +846,7 @@ describe('EarthWeb.earth', function () {
                 this.timeout(10000);
 
                 const balanceBefore = await earthWeb.earth.getUnconfirmedBalance(accounts.hex[toIdx]);
-                await earthWeb.earth.sendTrx(accounts.hex[toIdx], 10e5, { privateKey: accounts.pks[fromIdx], address: accounts.hex[fromIdx] });
+                await earthWeb.earth.sendEarth(accounts.hex[toIdx], 10e5, { privateKey: accounts.pks[fromIdx], address: accounts.hex[fromIdx] });
                 await waitChainData('balance', accounts.hex[toIdx], balanceBefore);
                 const balanceAfter = await earthWeb.earth.getUnconfirmedBalance(accounts.hex[toIdx]);
                 assert.equal(balanceAfter - balanceBefore, 10e5);
@@ -854,14 +854,14 @@ describe('EarthWeb.earth', function () {
 
             it('should throw invalid recipient provided error', async function () {
                 await assertThrow(
-                    earthWeb.earth.sendTrx('notValidAddress', 10e5, { privateKey: accounts.pks[fromIdx] }),
+                    earthWeb.earth.sendEarth('notValidAddress', 10e5, { privateKey: accounts.pks[fromIdx] }),
                     'Invalid recipient provided'
                 );
             });
 
             it('should throw invalid amount provided error', async function () {
                 await assertThrow(
-                    earthWeb.earth.sendTrx(accounts.hex[18], -1, { privateKey: accounts.pks[fromIdx] }),
+                    earthWeb.earth.sendEarth(accounts.hex[18], -1, { privateKey: accounts.pks[fromIdx] }),
                     'Invalid amount provided'
                 );
             });

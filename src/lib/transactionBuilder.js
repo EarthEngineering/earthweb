@@ -41,7 +41,7 @@ export default class TransactionBuilder {
         this.validator = new Validator(earthWeb);
     }
 
-    sendTrx(to = false, amount = 0, from = this.earthWeb.defaultAddress.hex, options, callback = false) {
+    sendEarth(to = false, amount = 0, from = this.earthWeb.defaultAddress.hex, options, callback = false) {
         if (utils.isFunction(options)) {
             callback = options;
             options = {};
@@ -56,7 +56,7 @@ export default class TransactionBuilder {
         }
 
         if (!callback)
-            return this.injectPromise(this.sendTrx, to, amount, from, options);
+            return this.injectPromise(this.sendEarth, to, amount, from, options);
 
         // accept amounts passed as strings
         amount = parseInt(amount)

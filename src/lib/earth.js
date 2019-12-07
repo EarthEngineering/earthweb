@@ -901,7 +901,7 @@ export default class Earth {
 
         try {
             const address = options.privateKey ? this.earthWeb.address.fromPrivateKey(options.privateKey) : options.address;
-            const transaction = await this.earthWeb.transactionBuilder.sendTrx(to, amount, address);
+            const transaction = await this.earthWeb.transactionBuilder.sendEarth(to, amount, address);
             const signedTransaction = await this.sign(transaction, options.privateKey || undefined);
             const result = await this.sendRawTransaction(signedTransaction);
 
@@ -1137,7 +1137,7 @@ export default class Earth {
         return this.sendTransaction(...args);
     }
 
-    sendTrx(...args) {
+    sendEarth(...args) {
         return this.sendTransaction(...args);
     }
 
