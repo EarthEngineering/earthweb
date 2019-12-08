@@ -137,31 +137,23 @@ export function decode58Check(addressStr) {
 }
 
 export function isAddressValid(base58Str) {
-    console.log("aaaaaaaaaaaaaaaaaaaa");
     if (typeof base58Str !== "string") return false;
 
-    console.log("bbbbbbbbbbbbaaaaaaaa");
     if (base58Str.length !== ADDRESS_SIZE) return false;
 
-    console.log("cccccccccccccccaaaaa");
     let address = decode58(base58Str);
 
-    console.log("ddddddddddddaaaaaaaa");
     if (address.length !== 25) return false;
 
-    console.log("eeeeeeeeeeeeeeeeeeaa");
     if (address[0] !== ADDRESS_PREFIX_BYTE) return false;
 
-    console.log("ffffffffffffffffffaa");
     const checkSum = address.slice(21);
     address = address.slice(0, 21);
 
-    console.log("ggggggggggggggggggga");
     const hash0 = SHA256(address);
     const hash1 = SHA256(hash0);
     const checkSum1 = hash1.slice(0, 4);
 
-    console.log("Rhhhhhhhhhhhaaaaaaaa");
     if (
         checkSum[0] == checkSum1[0] &&
         checkSum[1] == checkSum1[1] &&
@@ -173,7 +165,6 @@ export function isAddressValid(base58Str) {
     } else {
         console.log("this is false");
     }
-    console.log("iiiiiiiiiiiiiiiiiaaa");
 
     return false;
 }
