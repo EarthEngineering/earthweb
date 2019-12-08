@@ -383,10 +383,13 @@ export default class EarthWeb extends EventEmitter {
     }
 
     static isAddress(address = false) {
+        console.log(111111111111111111111);
         if (!utils.isString(address)) return false;
 
+        console.log(222222222222222222211);
         // Convert HEX to Base58
         if (address.length === 42) {
+            console.log(333333333333333111111);
             try {
                 return EarthWeb.isAddress(
                     utils.crypto.getBase58CheckAddress(
@@ -394,12 +397,15 @@ export default class EarthWeb extends EventEmitter {
                     )
                 );
             } catch (err) {
+                console.log(444444444444444444441);
                 return false;
             }
         }
         try {
+            console.log(555555555555555555555);
             return utils.crypto.isAddressValid(address);
         } catch (err) {
+            console.log(666666666666666666661);
             return false;
         }
     }

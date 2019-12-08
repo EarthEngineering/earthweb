@@ -1,10 +1,10 @@
-import {ADDRESS_PREFIX, ADDRESS_PREFIX_BYTE, ADDRESS_SIZE} from './address';
-import {base64EncodeToString} from './code';
-import {base64DecodeFromString, hexStr2byteArray} from './code';
-import {encode58, decode58} from './base58';
-import {byte2hexStr, byteArray2hexStr} from './bytes';
-import {ec as EC} from 'elliptic';
-import {keccak256, sha256} from './ethersUtils';
+import { ADDRESS_PREFIX, ADDRESS_PREFIX_BYTE, ADDRESS_SIZE } from "./address";
+import { base64EncodeToString } from "./code";
+import { base64DecodeFromString, hexStr2byteArray } from "./code";
+import { encode58, decode58 } from "./base58";
+import { byte2hexStr, byteArray2hexStr } from "./bytes";
+import { ec as EC } from "elliptic";
+import { keccak256, sha256 } from "./ethersUtils";
 
 export function getBase58CheckAddress(addressBytes) {
     const hash0 = SHA256(addressBytes);
@@ -17,16 +17,13 @@ export function getBase58CheckAddress(addressBytes) {
 }
 
 export function decodeBase58Address(base58Sting) {
-    if (typeof (base58Sting) != 'string')
-        return false;
+    if (typeof base58Sting != "string") return false;
 
-    if (base58Sting.length <= 4)
-        return false;
+    if (base58Sting.length <= 4) return false;
 
     let address = decode58(base58Sting);
 
-    if (base58Sting.length <= 4)
-        return false;
+    if (base58Sting.length <= 4) return false;
 
     const len = address.length;
     const offset = len - 4;
@@ -38,17 +35,20 @@ export function decodeBase58Address(base58Sting) {
     const hash1 = SHA256(hash0);
     const checkSum1 = hash1.slice(0, 4);
 
-    if (checkSum[0] == checkSum1[0] && checkSum[1] == checkSum1[1] && checkSum[2] ==
-        checkSum1[2] && checkSum[3] == checkSum1[3]
+    if (
+        checkSum[0] == checkSum1[0] &&
+        checkSum[1] == checkSum1[1] &&
+        checkSum[2] == checkSum1[2] &&
+        checkSum[3] == checkSum1[3]
     ) {
         return address;
     }
 
-    throw new Error('Invalid address provided');
+    throw new Error("Invalid address provided");
 }
 
 export function signTransaction(priKeyBytes, transaction) {
-    if (typeof priKeyBytes === 'string')
+    if (typeof priKeyBytes === "string")
         priKeyBytes = hexStr2byteArray(priKeyBytes);
 
     const txID = transaction.txID;
@@ -57,8 +57,7 @@ export function signTransaction(priKeyBytes, transaction) {
     if (Array.isArray(transaction.signature)) {
         if (!transaction.signature.includes(signature))
             transaction.signature.push(signature);
-    } else
-        transaction.signature = [signature];
+    } else transaction.signature = [signature];
     return transaction;
 }
 
@@ -67,7 +66,7 @@ export function arrayToBase64String(a) {
 }
 
 export function signBytes(privateKey, contents) {
-    if (typeof privateKey === 'string')
+    if (typeof privateKey === "string")
         privateKey = hexStr2byteArray(privateKey);
 
     const hashBytes = SHA256(contents);
@@ -78,18 +77,20 @@ export function signBytes(privateKey, contents) {
 
 export function getRowBytesFromTransactionBase64(base64Data) {
     const bytesDecode = base64DecodeFromString(base64Data);
-    const transaction = proto.protocol.Transaction.deserializeBinary(bytesDecode);
+    const transaction = proto.protocol.Transaction.deserializeBinary(
+        bytesDecode
+    );
     const raw = transaction.getRawData();
 
     return raw.serializeBinary();
 }
 
 export function genPriKey() {
-    const ec = new EC('secp256k1');
+    const ec = new EC("secp256k1");
     const key = ec.genKeyPair();
     const priKey = key.getPrivate();
 
-    let priKeyHex = priKey.toString('hex');
+    let priKeyHex = priKey.toString("hex");
 
     while (priKeyHex.length < 64) {
         priKeyHex = `0${priKeyHex}`;
@@ -99,10 +100,11 @@ export function genPriKey() {
 }
 
 export function computeAddress(pubBytes) {
-    if (pubBytes.length === 65)
-        pubBytes = pubBytes.slice(1);
+    if (pubBytes.length === 65) pubBytes = pubBytes.slice(1);
 
-    const hash = keccak256(pubBytes).toString().substring(2);
+    const hash = keccak256(pubBytes)
+        .toString()
+        .substring(2);
     const addressHex = ADDRESS_PREFIX + hash.substring(24);
 
     return hexStr2byteArray(addressHex);
@@ -116,17 +118,18 @@ export function getAddressFromPriKey(priKeyBytes) {
 export function decode58Check(addressStr) {
     const decodeCheck = decode58(addressStr);
 
-    if (decodeCheck.length <= 4)
-        return false;
+    if (decodeCheck.length <= 4) return false;
 
     const decodeData = decodeCheck.slice(0, decodeCheck.length - 4);
     const hash0 = SHA256(decodeData);
     const hash1 = SHA256(hash0);
 
-    if (hash1[0] === decodeCheck[decodeData.length] &&
+    if (
+        hash1[0] === decodeCheck[decodeData.length] &&
         hash1[1] === decodeCheck[decodeData.length + 1] &&
         hash1[2] === decodeCheck[decodeData.length + 2] &&
-        hash1[3] === decodeCheck[decodeData.length + 3]) {
+        hash1[3] === decodeCheck[decodeData.length + 3]
+    ) {
         return decodeData;
     }
 
@@ -134,37 +137,47 @@ export function decode58Check(addressStr) {
 }
 
 export function isAddressValid(base58Str) {
-    if (typeof (base58Str) !== 'string')
-        return false;
+    console.log("aaaaaaaaaaaaaaaaaaaa");
+    if (typeof base58Str !== "string") return false;
 
-    if (base58Str.length !== ADDRESS_SIZE)
-        return false;
+    console.log("bbbbbbbbbbbbaaaaaaaa");
+    if (base58Str.length !== ADDRESS_SIZE) return false;
 
+    console.log("cccccccccccccccaaaaa");
     let address = decode58(base58Str);
 
-    if (address.length !== 25)
-        return false;
+    console.log("ddddddddddddaaaaaaaa");
+    if (address.length !== 25) return false;
 
-    if (address[0] !== ADDRESS_PREFIX_BYTE)
-        return false;
+    console.log("eeeeeeeeeeeeeeeeeeaa");
+    if (address[0] !== ADDRESS_PREFIX_BYTE) return false;
 
+    console.log("ffffffffffffffffffaa");
     const checkSum = address.slice(21);
     address = address.slice(0, 21);
 
+    console.log("ggggggggggggggggggga");
     const hash0 = SHA256(address);
     const hash1 = SHA256(hash0);
     const checkSum1 = hash1.slice(0, 4);
 
-    if (checkSum[0] == checkSum1[0] && checkSum[1] == checkSum1[1] && checkSum[2] ==
-        checkSum1[2] && checkSum[3] == checkSum1[3]
+    console.log("Rhhhhhhhhhhhaaaaaaaa");
+    if (
+        checkSum[0] == checkSum1[0] &&
+        checkSum[1] == checkSum1[1] &&
+        checkSum[2] == checkSum1[2] &&
+        checkSum[3] == checkSum1[3]
     ) {
-        return true
+        return true;
     }
+    console.log("iiiiiiiiiiiiiiiiiaaa");
 
     return false;
 }
 
-export function getBase58CheckAddressFromPriKeyBase64String(priKeyBase64String) {
+export function getBase58CheckAddressFromPriKeyBase64String(
+    priKeyBase64String
+) {
     const priKeyBytes = base64DecodeFromString(priKeyBase64String);
     const pubBytes = getPubKeyFromPriKey(priKeyBytes);
     const addressBytes = computeAddress(pubBytes);
@@ -191,19 +204,19 @@ export function getAddressFromPriKeyBase64String(priKeyBase64String) {
 }
 
 export function getPubKeyFromPriKey(priKeyBytes) {
-    const ec = new EC('secp256k1');
-    const key = ec.keyFromPrivate(priKeyBytes, 'bytes');
+    const ec = new EC("secp256k1");
+    const key = ec.keyFromPrivate(priKeyBytes, "bytes");
     const pubkey = key.getPublic();
     const x = pubkey.x;
     const y = pubkey.y;
 
-    let xHex = x.toString('hex');
+    let xHex = x.toString("hex");
 
     while (xHex.length < 64) {
         xHex = `0${xHex}`;
     }
 
-    let yHex = y.toString('hex');
+    let yHex = y.toString("hex");
 
     while (yHex.length < 64) {
         yHex = `0${yHex}`;
@@ -216,20 +229,20 @@ export function getPubKeyFromPriKey(priKeyBytes) {
 }
 
 export function ECKeySign(hashBytes, priKeyBytes) {
-    const ec = new EC('secp256k1');
-    const key = ec.keyFromPrivate(priKeyBytes, 'bytes');
+    const ec = new EC("secp256k1");
+    const key = ec.keyFromPrivate(priKeyBytes, "bytes");
     const signature = key.sign(hashBytes);
     const r = signature.r;
     const s = signature.s;
     const id = signature.recoveryParam;
 
-    let rHex = r.toString('hex');
+    let rHex = r.toString("hex");
 
     while (rHex.length < 64) {
         rHex = `0${rHex}`;
     }
 
-    let sHex = s.toString('hex');
+    let sHex = s.toString("hex");
 
     while (sHex.length < 64) {
         sHex = `0${sHex}`;
@@ -243,7 +256,7 @@ export function ECKeySign(hashBytes, priKeyBytes) {
 
 export function SHA256(msgBytes) {
     const msgHex = byteArray2hexStr(msgBytes);
-    const hashHex = sha256('0x' + msgHex).replace(/^0x/, '')
+    const hashHex = sha256("0x" + msgHex).replace(/^0x/, "");
     return hexStr2byteArray(hashHex);
 }
 
