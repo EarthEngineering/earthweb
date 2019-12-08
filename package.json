@@ -3,6 +3,23 @@
     "version": "0.2.12",
     "description": "JavaScript SDK that encapsulates the EARTH HTTP API",
     "main": "dist/EarthWeb.node.js",
+    "author": {
+        "name": "Gabriel Cardona",
+        "url": "https://www.earth.engineering"
+    },
+    "contributors": [
+        {
+            "name": "Francesco Sullo",
+            "url": "https://github.com/sullof"
+        },
+        {
+            "name": "Kondax",
+            "url": "https://github.com/Kondax"
+        }
+    ],
+    "license": "MIT",
+    "homepage": "https://github.com/earthengineering/earthweb",
+    "repository": "https://github.com/earthengineering/earthweb.git",
     "scripts": {
         "prepare": "npm run build",
         "build": "npm run clean && webpack --config webpack.config.js --progress --colors",
@@ -67,22 +84,5 @@
         "webpack": "^4.17.2",
         "webpack-cli": "^3.1.0",
         "webpack-node-externals": "^1.7.2"
-    },
-    "author": {
-        "name": "Kondax",
-        "url": "https://github.com/Kondax"
-    },
-    "contributors": [
-        {
-            "name": "Francesco Sullo",
-            "url": "https://github.com/sullof"
-        },
-        {
-            "name": "Gabriel Cardona",
-            "url": "https://www.earth.engineering"
-        }
-    ],
-    "homepage": "https://github.com/earthengineering/earthweb",
-    "license": "MIT",
-    "repository": "https://github.com/earthengineering/earthweb.git"
+    }
 }

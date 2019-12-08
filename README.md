@@ -33,8 +33,6 @@ yarn add earthweb
 
 ### Browser
 
-First, don't use the release section of this repo, it has not updated in a long time.
-
 Then easiest way to use EarthWeb in a browser is to install it as above and copy the dist file to your working folder. For example:
 
 ```

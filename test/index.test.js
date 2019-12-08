@@ -9,7 +9,7 @@ const {
 } = require("./helpers/config");
 const earthWebBuilder = require("./helpers/earthWebBuilder");
 const EarthWeb = earthWebBuilder.EarthWeb;
-const log = require("./helpers/log");
+// const log = require("./helpers/log");
 const BigNumber = require("bignumber.js");
 const broadcaster = require("./helpers/broadcaster");
 const wait = require("./helpers/wait");
