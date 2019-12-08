@@ -160,10 +160,7 @@ export function isAddressValid(base58Str) {
         checkSum[2] == checkSum1[2] &&
         checkSum[3] == checkSum1[3]
     ) {
-        console.log("this is tru");
         return true;
-    } else {
-        console.log("this is false");
     }
 
     return false;
