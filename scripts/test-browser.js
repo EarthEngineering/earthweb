@@ -1,12 +1,10 @@
 const fs = require("fs");
 const path = require("path");
-const target = path.resolve(__dirname, "..", "test", "setup", "EarthWeb.js");
+const dest = path.resolve(__dirname, "..", "test", "setup", "EarthWeb.js");
+const src = path.resolve(__dirname, "..", "test", "setup", "browser.js");
 
 try {
-    fs.unlinkSync(target);
+    fs.unlinkSync(dest);
 } catch (ex) {}
 
-fs.copyFileSync(
-    path.resolve(__dirname, "..", "test", "setup", "browser.js"),
-    target
-);
+fs.copyFileSync(src, dest);

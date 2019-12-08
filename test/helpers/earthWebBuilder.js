@@ -32,6 +32,7 @@ const getInstance = () => {
 const newTestAccounts = async amount => {
     const earthWeb = createInstance();
 
+    console.log(earthWeb);
     console.log(chalk.blue(`Generating ${amount} new accounts...`));
     await earthWeb.fullNode.request(
         "/admin/temporary-accounts-generation?accounts=" + amount

@@ -1,16 +1,11 @@
 const chai = require('chai');
 const assert = chai.assert;
-const txPars = require('../helpers/txPars');
-const jlog = require('../helpers/jlog');
 const assertThrow = require('../helpers/assertThrow');
 const wait = require('../helpers/wait');
 const broadcaster = require('../helpers/broadcaster');
-const pollAccountFor = require('../helpers/pollAccountFor');
 const _ = require('lodash');
 const earthWebBuilder = require('../helpers/earthWebBuilder');
-const assertEqualHex = require('../helpers/assertEqualHex');
 const EarthWeb = earthWebBuilder.EarthWeb;
-const config = require('../helpers/config');
 const waitChainData = require('../helpers/waitChainData');
 const {
     ADDRESS_BASE58,
@@ -18,6 +13,11 @@ const {
     getTokenOptions,
 } = require('../helpers/config');
 const testRevertContract = require('../fixtures/contracts').testRevert;
+// const txPars = require('../helpers/txPars');
+// const jlog = require('../helpers/jlog');
+// const pollAccountFor = require('../helpers/pollAccountFor');
+// const assertEqualHex = require('../helpers/assertEqualHex');
+// const config = require('../helpers/config');
 
 describe('EarthWeb.earth', function () {
 
