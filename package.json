@@ -1,6 +1,6 @@
 {
     "name": "earthweb",
-    "version": "0.2.9",
+    "version": "0.2.10",
     "description": "JavaScript SDK that encapsulates the EARTH HTTP API",
     "main": "dist/EarthWeb.node.js",
     "scripts": {
