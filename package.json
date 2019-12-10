@@ -1,7 +1,7 @@
 {
     "name": "earthweb",
-    "version": "0.2.13",
-    "description": "JavaScript SDK that encapsulates the EARTH HTTP API",
+    "version": "0.3.0",
+    "description": "Interact with a local or remote full EARTH node",
     "main": "dist/EarthWeb.node.js",
     "author": {
         "name": "Gabriel Cardona",

@@ -7,7 +7,7 @@ EarthWeb aims to deliver a unified, seamless development experience influenced b
 -   Version built for Node.js v6 and above
 -   Version built for browsers with more than 0.25% market share
 
-You can access either version specifically from the [dist](dist) folder.
+You can access either version specifically from the dist folder.
 
 EarthWeb is also compatible with frontend frameworks such as:
 
@@ -58,17 +58,18 @@ Anything you do should be explorable on https://explore.earth.engineering
 
 ## Your local private network for heavy testing
 
-You can set up your own private network, running Earth Quickstart. To do it you must [install Docker](https://docs.docker.com/install/) and, when ready, run a command like
+You can set up your own private network, running Earth Quickstart. To do it you must [install Docker](https://docs.docker.com/install)
+
+Once you have docker installed next `pull` the `latest` quickstart image from Docker Hub:
 
 ```bash
-docker run -it --rm \
-  -p 9090:9090 \
-  -e "defaultBalance=100000" \
-  -e "showQueryString=true" \
-  -e "showBody=true" \
-  -e "formatJson=true" \
-  --name earth \
-  earthengineering/quickstart
+docker pull earthengineering/quickstart:latest
+```
+
+And, when ready, run a command like
+
+```bash
+docker run -it -p 9090:9090  --rm --name earth earthengineering/quickstart
 ```
 
 [More details about Earth Quickstart on GitHub](https://github.com/earthengineering/docker-earth-quickstart)

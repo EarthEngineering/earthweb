@@ -75,7 +75,7 @@ export default class TransactionBuilder {
             {
                 names: ['recipient', 'origin'],
                 type: 'notEqual',
-                msg: 'Cannot transfer TRX to the same account'
+                msg: 'Cannot transfer EARTH to the same account'
             },
             {
                 name: 'amount',
@@ -934,7 +934,7 @@ export default class TransactionBuilder {
             description = false,
             url = false,
             totalSupply = 0,
-            trxRatio = 1, // How much TRX will `tokenRatio` cost?
+            trxRatio = 1, // How much EARTH will `tokenRatio` cost?
             tokenRatio = 1, // How many tokens will `trxRatio` afford?
             saleStart = Date.now(),
             saleEnd = false,
@@ -954,7 +954,7 @@ export default class TransactionBuilder {
                 value: totalSupply
             },
             {
-                name: 'TRX ratio',
+                name: 'EARTH ratio',
                 type: 'positive-integer',
                 value: trxRatio
             },
@@ -1428,7 +1428,7 @@ export default class TransactionBuilder {
                 value: tokenBalance
             },
             {
-                name: 'trx balance',
+                name: 'earth balance',
                 type: 'positive-integer',
                 value: trxBalance
             }
@@ -1647,7 +1647,7 @@ export default class TransactionBuilder {
     /**
      * Trade tokens on a bancor style exchange.
      * Expected value is a validation and used to cap the total amt of token 2 spent.
-     * Use "_" for the constant value for TRX.
+     * Use "_" for the constant value for EARTH.
      */
     tradeExchangeTokens(exchangeID = false,
                         tokenName = false,
