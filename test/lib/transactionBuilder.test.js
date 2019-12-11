@@ -10,8 +10,8 @@ const assertEqualHex = require('../helpers/assertEqualHex');
 const testRevertContract = require('../fixtures/contracts').testRevert;
 const testConstantContract = require('../fixtures/contracts').testConstant;
 const waitChainData = require('../helpers/waitChainData');
-// const jlog = require('../helpers/jlog');
-// const pollAccountFor = require('../helpers/pollAccountFor');
+const jlog = require('../helpers/jlog');
+const pollAccountFor = require('../helpers/pollAccountFor');
 
 const EarthWeb = earthWebBuilder.EarthWeb;
 const {
@@ -32,7 +32,7 @@ describe('EarthWeb.transactionBuilder', function () {
 
     before(async function () {
         earthWeb = earthWebBuilder.createInstance();
-        console.log(earthWeb)
+        // console.log(earthWeb)
         // ALERT this works only with Earth Quickstart:
         accounts = await earthWebBuilder.getTestAccounts(-1);
         emptyAccount = await EarthWeb.createAccount();
@@ -120,7 +120,7 @@ describe('EarthWeb.transactionBuilder', function () {
 
             await assertThrow(
                 earthWeb.transactionBuilder.sendEarth(accounts.hex[3], 10, accounts.hex[3]),
-                'Cannot transfer Earth to the same account'
+                'Cannot transfer EARTH to the same account'
             );
 
         });
@@ -136,7 +136,7 @@ describe('EarthWeb.transactionBuilder', function () {
         });
     });
 
-    describe('#foooooobar()', function () {
+    describe('#createToken()', function () {
 
         // This test passes only the first time because, in order to test updateToken, we broadcast the token creation
 
@@ -157,75 +157,75 @@ describe('EarthWeb.transactionBuilder', function () {
             }
         });
 
-        // it(`should allow accounts[8] to create a TestToken with voteScore and precision`, async function () {
-        //     if (isAllowSameTokenNameApproved) {
+        it(`should allow accounts[8] to create a TestToken with voteScore and precision`, async function () {
+            if (isAllowSameTokenNameApproved) {
 
-        //         const options = getTokenOptions();
-        //         options.voteScore = 5;
-        //         options.precision = 4;
+                const options = getTokenOptions();
+                options.voteScore = 5;
+                options.precision = 4;
 
-        //         for (let i = 0; i < 2; i++) {
-        //             if (i === 1) options.permissionId = 2;
-        //             const transaction = await earthWeb.transactionBuilder.createToken(options, accounts.b58[8 + i]);
+                for (let i = 0; i < 2; i++) {
+                    if (i === 1) options.permissionId = 2;
+                    const transaction = await earthWeb.transactionBuilder.createToken(options, accounts.b58[8 + i]);
 
-        //             const parameter = txPars(transaction);
-        //             assert.equal(transaction.txID.length, 64);
-        //             assert.equal(parameter.value.vote_score, options.voteScore);
-        //             assert.equal(parameter.value.precision, options.precision);
-        //             assert.equal(parameter.value.total_supply, options.totalSupply);
-        //             await assertEqualHex(parameter.value.abbr, options.abbreviation);
-        //             assert.equal(parameter.value.owner_address, accounts.hex[8 + i]);
-        //             assert.equal(parameter.type_url, 'type.googleapis.com/protocol.AssetIssueContract');
-        //             assert.equal(transaction.raw_data.contract[0].Permission_id || 0, options.permissionId || 0);
+                    const parameter = txPars(transaction);
+                    assert.equal(transaction.txID.length, 64);
+                    assert.equal(parameter.value.vote_score, options.voteScore);
+                    assert.equal(parameter.value.precision, options.precision);
+                    assert.equal(parameter.value.total_supply, options.totalSupply);
+                    await assertEqualHex(parameter.value.abbr, options.abbreviation);
+                    assert.equal(parameter.value.owner_address, accounts.hex[8 + i]);
+                    assert.equal(parameter.type_url, 'type.googleapis.com/protocol.AssetIssueContract');
+                    assert.equal(transaction.raw_data.contract[0].Permission_id || 0, options.permissionId || 0);
 
-        //             await broadcaster(null, accounts.pks[8 + i], transaction)
+                    await broadcaster(null, accounts.pks[8 + i], transaction)
 
-        //             const tokenList = await earthWeb.earth.getTokensIssuedByAddress(accounts.b58[8 + i])
-        //             const tokenID = tokenList[options.name].id
-        //             const token = await earthWeb.earth.getTokenByID(tokenID)
+                    const tokenList = await earthWeb.earth.getTokensIssuedByAddress(accounts.b58[8 + i])
+                    const tokenID = tokenList[options.name].id
+                    const token = await earthWeb.earth.getTokenByID(tokenID)
 
-        //             assert.equal(token.vote_score, options.voteScore);
-        //             assert.equal(token.precision, options.precision);
-        //         }
+                    assert.equal(token.vote_score, options.voteScore);
+                    assert.equal(token.precision, options.precision);
+                }
 
-        //     } else {
-        //         this.skip()
-        //     }
-        // });
+            } else {
+                this.skip()
+            }
+        });
 
-        // it(`should create a TestToken passing any number as a string`, async function () {
-        //     const options = getTokenOptions();
-        //     options.totalSupply = '100'
-        //     options.frozenAmount = '5'
-        //     options.frozenDuration = '2'
-        //     options.saleEnd = options.saleEnd.toString()
-        //     for (let i = 0; i < 2; i++) {
-        //         if (i === 1) options.permissionId = 2;
-        //         const transaction = await earthWeb.transactionBuilder.createToken(options);
-        //         const parameter = txPars(transaction);
-        //         await assertEqualHex(parameter.value.abbr, options.abbreviation);
-        //         assert.equal(transaction.raw_data.contract[0].Permission_id || 0, options.permissionId || 0);
-        //     }
-        // });
+        it(`should create a TestToken passing any number as a string`, async function () {
+            const options = getTokenOptions();
+            options.totalSupply = '100'
+            options.frozenAmount = '5'
+            options.frozenDuration = '2'
+            options.saleEnd = options.saleEnd.toString()
+            for (let i = 0; i < 2; i++) {
+                if (i === 1) options.permissionId = 2;
+                const transaction = await earthWeb.transactionBuilder.createToken(options);
+                const parameter = txPars(transaction);
+                await assertEqualHex(parameter.value.abbr, options.abbreviation);
+                assert.equal(transaction.raw_data.contract[0].Permission_id || 0, options.permissionId || 0);
+            }
+        });
 
-        // it(`should create a TestToken without freezing anything in 3.6.0`, async function () {
-        //     if (earthWeb.fullnodeSatisfies('^3.6.0')) {
-        //         const options = getTokenOptions();
-        //         options.totalSupply = '100'
-        //         options.frozenAmount = '0'
-        //         options.frozenDuration = '0'
-        //         options.saleEnd = options.saleEnd.toString()
-        //         for (let i = 0; i < 2; i++) {
-        //             if (i === 1) options.permissionId = 2;
-        //             const transaction = await earthWeb.transactionBuilder.createToken(options);
-        //             const parameter = txPars(transaction);
-        //             await assertEqualHex(parameter.value.abbr, options.abbreviation);
-        //             assert.equal(transaction.raw_data.contract[0].Permission_id || 0, options.permissionId || 0);
-        //         }
-        //     } else {
-        //         this.skip()
-        //     }
-        // });
+        it(`should create a TestToken without freezing anything in 3.6.0`, async function () {
+            if (earthWeb.fullnodeSatisfies('^3.6.0')) {
+                const options = getTokenOptions();
+                options.totalSupply = '100'
+                options.frozenAmount = '0'
+                options.frozenDuration = '0'
+                options.saleEnd = options.saleEnd.toString()
+                for (let i = 0; i < 2; i++) {
+                    if (i === 1) options.permissionId = 2;
+                    const transaction = await earthWeb.transactionBuilder.createToken(options);
+                    const parameter = txPars(transaction);
+                    await assertEqualHex(parameter.value.abbr, options.abbreviation);
+                    assert.equal(transaction.raw_data.contract[0].Permission_id || 0, options.permissionId || 0);
+                }
+            } else {
+                this.skip()
+            }
+        });
 
 
         it('should throw if an invalid name is passed', async function () {

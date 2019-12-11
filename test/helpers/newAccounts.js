@@ -1,5 +1,5 @@
 const earthWebBuilder = require("./earthWebBuilder");
-// const earthWeb = earthWebBuilder.createInstance();
+const earthWeb = earthWebBuilder.createInstance();
 
 const amount = process.argv[2] || 10;
 
