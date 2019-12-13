@@ -13,12 +13,12 @@ async function main() {
         privateKey: fullNodePrivateKey
     });
 
-    let sendTrx = await earthweb.transactionBuilder.sendEarth(
+    let sendEarth = await earthweb.transactionBuilder.sendEarth(
         "TVyrnRU44hUecS6Ji2AQwBQ9oZ76Xenmqz",
         11
     );
 
-    console.log(sendTrx);
+    console.log(sendEarth);
 }
 
 // make sure to call main() to start the dapp

@@ -692,7 +692,7 @@ export default class TransactionBuilder {
             name
         };
 
-        // tokenValue and tokenId can cause errors if provided when the trx10 proposal has not been approved yet. So we set them only if they are passed to the method.
+        // tokenValue and tokenId can cause errors if provided when the earth10 proposal has not been approved yet. So we set them only if they are passed to the method.
         if (utils.isNotNullOrUndefined(tokenValue))
             args.call_token_value = parseInt(tokenValue)
         if (utils.isNotNullOrUndefined(tokenId))
@@ -934,8 +934,8 @@ export default class TransactionBuilder {
             description = false,
             url = false,
             totalSupply = 0,
-            trxRatio = 1, // How much EARTH will `tokenRatio` cost?
-            tokenRatio = 1, // How many tokens will `trxRatio` afford?
+            earthRatio = 1, // How much EARTH will `tokenRatio` cost?
+            tokenRatio = 1, // How many tokens will `earthRatio` afford?
             saleStart = Date.now(),
             saleEnd = false,
             freeBandwidth = 0, // The creator's "donated" bandwidth for use by token holders
@@ -956,7 +956,7 @@ export default class TransactionBuilder {
             {
                 name: 'EARTH ratio',
                 type: 'positive-integer',
-                value: trxRatio
+                value: earthRatio
             },
             {
                 name: 'Token ratio',
@@ -1040,7 +1040,7 @@ export default class TransactionBuilder {
             description: fromUtf8(description),
             url: fromUtf8(url),
             total_supply: parseInt(totalSupply),
-            trx_num: parseInt(trxRatio),
+            earth_num: parseInt(earthRatio),
             num: parseInt(tokenRatio),
             start_time: parseInt(saleStart),
             end_time: parseInt(saleEnd),
@@ -1394,7 +1394,7 @@ export default class TransactionBuilder {
      * Create an exchange between a token and EARTH.
      * Token Name should be a CASE SENSITIVE string.
      */
-    createTRXExchange(tokenName, tokenBalance, trxBalance, ownerAddress = this.earthWeb.defaultAddress.hex, options, callback = false) {
+    createEARTHExchange(tokenName, tokenBalance, earthBalance, ownerAddress = this.earthWeb.defaultAddress.hex, options, callback = false) {
         if (utils.isFunction(options)) {
             callback = options;
             options = {};
@@ -1409,7 +1409,7 @@ export default class TransactionBuilder {
         }
 
         if (!callback)
-            return this.injectPromise(this.createTRXExchange, tokenName, tokenBalance, trxBalance, ownerAddress, options);
+            return this.injectPromise(this.createEARTHExchange, tokenName, tokenBalance, earthBalance, ownerAddress, options);
 
         if (this.validator.notValid([
             {
@@ -1430,7 +1430,7 @@ export default class TransactionBuilder {
             {
                 name: 'earth balance',
                 type: 'positive-integer',
-                value: trxBalance
+                value: earthBalance
             }
         ], callback))
             return;
@@ -1439,8 +1439,8 @@ export default class TransactionBuilder {
             owner_address: toHex(ownerAddress),
             first_token_id: fromUtf8(tokenName),
             first_token_balance: tokenBalance,
-            second_token_id: '5f', // Constant for TRX.
-            second_token_balance: trxBalance
+            second_token_id: '5f', // Constant for EARTH.
+            second_token_balance: earthBalance
         };
 
         if (options && options.permissionId) {
@@ -1523,7 +1523,7 @@ export default class TransactionBuilder {
     /**
      * Adds tokens into a bancor style exchange.
      * Will add both tokens at market rate.
-     * Use "_" for the constant value for TRX.
+     * Use "_" for the constant value for EARTH.
      */
     injectExchangeTokens(exchangeID = false, tokenName = false, tokenAmount = 0, ownerAddress = this.earthWeb.defaultAddress.hex, options, callback = false) {
         if (utils.isFunction(options)) {
@@ -1585,7 +1585,7 @@ export default class TransactionBuilder {
     /**
      * Withdraws tokens from a bancor style exchange.
      * Will withdraw at market rate both tokens.
-     * Use "_" for the constant value for TRX.
+     * Use "_" for the constant value for EARTH.
      */
     withdrawExchangeTokens(exchangeID = false, tokenName = false, tokenAmount = 0, ownerAddress = this.earthWeb.defaultAddress.hex, options, callback = false) {
         if (utils.isFunction(options)) {
