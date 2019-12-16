@@ -58,21 +58,21 @@ Anything you do should be explorable on https://explore.earth.engineering
 
 ## Your local private network for heavy testing
 
-You can set up your own private network, running Earth Quickstart. To do it you must [install Docker](https://docs.docker.com/install)
+You can set up your own private network, running [Spark](https://github.com/EarthEngineering/spark). To do it you must [install Docker](https://docs.docker.com/install)
 
-Once you have docker installed next `pull` the `latest` quickstart image from Docker Hub:
+Once you have docker installed next `pull` the `latest` Spark image from Docker Hub:
 
 ```bash
-docker pull earthengineering/quickstart:latest
+docker pull earthengineering/spark:latest
 ```
 
 And, when ready, run a command like
 
 ```bash
-docker run -it -p 9090:9090  --rm --name earth earthengineering/quickstart
+docker run -it -p 9090:9090  --rm --name earth earthengineering/spark
 ```
 
-[More details about Earth Quickstart on GitHub](https://github.com/earthengineering/docker-earth-quickstart)
+[More details about Spark on GitHub](https://github.com/earthengineering/spark)
 
 ## Creating an Instance
 
@@ -143,6 +143,6 @@ In order to contribute you can
 -   install the dependencies — `npm i`
 -   do your changes to the code
 -   build the EarthWeb dist files — `npm run build`
--   run a local private network using Earth Quickstart
+-   run a local private network using [Spark](https://github.com/EarthEngineering/spark)
 -   run the tests — `npm test:node`
 -   push your changes and open a pull request

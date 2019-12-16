@@ -17,7 +17,7 @@ describe("#contract.method", function() {
 
     before(async function() {
         earthWeb = earthWebBuilder.createInstance();
-        // ALERT this works only with Earth Quickstart:
+        // ALERT this works only with Spark:
         accounts = await earthWebBuilder.getTestAccounts(-1);
         emptyAccount = await EarthWeb.createAccount();
     });

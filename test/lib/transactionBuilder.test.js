@@ -33,7 +33,7 @@ describe('EarthWeb.transactionBuilder', function () {
     before(async function () {
         earthWeb = earthWebBuilder.createInstance();
         // console.log(earthWeb)
-        // ALERT this works only with Earth Quickstart:
+        // ALERT this works only with Spark:
         accounts = await earthWebBuilder.getTestAccounts(-1);
         emptyAccount = await EarthWeb.createAccount();
         isAllowSameTokenNameApproved = await isProposalApproved(earthWeb, 'getAllowSameTokenName')
@@ -1119,7 +1119,7 @@ describe('EarthWeb.transactionBuilder', function () {
 
 
     describe.skip("#vote", async function () {
-        // this is not testable because on Earth Quickstart (like on Ohio) it is not possible to vote
+        // this is not testable because on Spark (like on Ohio) it is not possible to vote
 
         let url = 'https://www.earth.engineering';
         // let witnesses;
